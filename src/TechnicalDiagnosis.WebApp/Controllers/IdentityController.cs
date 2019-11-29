@@ -12,10 +12,10 @@ using TechnicalDiagnosis.Common;
 using TechnicalDiagnosis.DataLayer.Context;
 using TechnicalDiagnosis.DomainClasses;
 using TechnicalDiagnosis.Services;
-using TechnicalDiagnosis.WebApp.Models;
 
 namespace TechnicalDiagnosis.WebApp.Controllers
 {
+    [Route("api/[controller]")]
     public class IdentityController : Controller
     {
         private readonly IUsersService _usersService;

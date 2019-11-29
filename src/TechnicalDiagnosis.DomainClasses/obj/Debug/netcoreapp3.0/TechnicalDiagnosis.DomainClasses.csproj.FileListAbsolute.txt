@@ -1,0 +1,8 @@
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.DomainClasses\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.DomainClasses.deps.json
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.DomainClasses\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.DomainClasses.dll
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.DomainClasses\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.DomainClasses.pdb
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.DomainClasses\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.DomainClasses.csprojAssemblyReference.cache
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.DomainClasses\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.DomainClasses.AssemblyInfoInputs.cache
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.DomainClasses\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.DomainClasses.AssemblyInfo.cs
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.DomainClasses\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.DomainClasses.dll
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.DomainClasses\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.DomainClasses.pdb

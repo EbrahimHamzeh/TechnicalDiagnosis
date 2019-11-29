@@ -6,7 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +16,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using TechnicalDiagnosis.DataLayer.Context;
 using TechnicalDiagnosis.Services;
 using TechnicalDiagnosis.ViewModels;
@@ -42,6 +45,17 @@ namespace TechnicalDiagnosis.WebApp
           }, "RefreshTokenExpirationMinutes is less than AccessTokenExpirationMinutes. Obtaining new tokens using the refresh token should happen only if the access token has expired.");
             services.AddOptions<ApiSettings>()
                     .Bind(Configuration.GetSection("ApiSettings"));
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IAntiForgeryCookieService, AntiForgeryCookieService>();
+            services.AddScoped<IUnitOfWork, ApplicationDbContext>();
+            services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IRolesService, RolesService>();
+            services.AddSingleton<ISecurityService, SecurityService>();
+            services.AddScoped<IDbInitializerService, DbInitializerService>();
+            services.AddScoped<ITokenStoreService, TokenStoreService>();
+            services.AddScoped<ITokenValidatorService, TokenValidatorService>();
+            services.AddScoped<ITokenFactoryService, TokenFactoryService>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -129,11 +143,54 @@ namespace TechnicalDiagnosis.WebApp
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
+
+                        app.UseExceptionHandler(appBuilder =>
+            {
+                appBuilder.Use(async (context, next) =>
+                {
+                    var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
+                    if (error != null && error.Error is SecurityTokenExpiredException)
+                    {
+                        context.Response.StatusCode = 401;
+                        context.Response.ContentType = "application/json";
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                        {
+                            State = 401,
+                            Msg = "token expired"
+                        }));
+                    }
+                    else if (error != null && error.Error != null)
+                    {
+                        context.Response.StatusCode = 500;
+                        context.Response.ContentType = "application/json";
+                        await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                        {
+                            State = 500,
+                            Msg = error.Error.Message
+                        }));
+                    }
+                    else
+                    {
+                        await next();
+                    }
+                });
+            });
+
+            var scopeFactory = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>();
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var dbInitializer = scope.ServiceProvider.GetService<IDbInitializerService>();
+                dbInitializer.Initialize();
+                dbInitializer.SeedData();
+            }
+
+            app.UseStatusCodePages();
+            app.UseDefaultFiles(); // so index.html is not required
             app.UseStaticFiles();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,0 +1,17 @@
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.Services.deps.json
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.Services.dll
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.Services.pdb
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.Common.dll
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.DataLayer.dll
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.DomainClasses.dll
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.ViewModels.dll
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.DomainClasses.pdb
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.DataLayer.pdb
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.ViewModels.pdb
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.Common.pdb
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.Services.csprojAssemblyReference.cache
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.Services.AssemblyInfoInputs.cache
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.Services.AssemblyInfo.cs
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.Services.csproj.CopyComplete
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.Services.dll
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Services\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.Services.pdb
