@@ -246,3 +246,9 @@ ModelManifest.xml
 .fake/
 src/IdentityCookie.App/package-lock.json
 src/IdentityCookie.App/wwwroot/App_Data
+src/TechnicalDiagnosis.Common/obj/Debug/netcoreapp3.0/TechnicalDiagnosis.Common.assets.cache
+src/TechnicalDiagnosis.DataLayer/obj/Debug/netcoreapp3.0/TechnicalDiagnosis.DataLayer.assets.cache
+src/TechnicalDiagnosis.DomainClasses/obj/Debug/netcoreapp3.0/TechnicalDiagnosis.DomainClasses.assets.cache
+src/TechnicalDiagnosis.Services/obj/Debug/netcoreapp3.0/TechnicalDiagnosis.Services.assets.cache
+src/TechnicalDiagnosis.ViewModels/obj/Debug/netcoreapp3.0/TechnicalDiagnosis.ViewModels.assets.cache
+src/TechnicalDiagnosis.WebApp/obj/Debug/netcoreapp3.0/TechnicalDiagnosis.WebApp.assets.cache
