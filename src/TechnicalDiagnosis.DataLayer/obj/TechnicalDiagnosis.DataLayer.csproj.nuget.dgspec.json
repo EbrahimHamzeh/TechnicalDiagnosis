@@ -1,0 +1,167 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\Ebrahim\\Desktop\\TechnicalDiagnosis\\src\\TechnicalDiagnosis.DataLayer\\TechnicalDiagnosis.DataLayer.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\Ebrahim\\Desktop\\TechnicalDiagnosis\\src\\TechnicalDiagnosis.DataLayer\\TechnicalDiagnosis.DataLayer.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Ebrahim\\Desktop\\TechnicalDiagnosis\\src\\TechnicalDiagnosis.DataLayer\\TechnicalDiagnosis.DataLayer.csproj",
+        "projectName": "TechnicalDiagnosis.DataLayer",
+        "projectPath": "C:\\Users\\Ebrahim\\Desktop\\TechnicalDiagnosis\\src\\TechnicalDiagnosis.DataLayer\\TechnicalDiagnosis.DataLayer.csproj",
+        "packagesPath": "C:\\Users\\Ebrahim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Ebrahim\\Desktop\\TechnicalDiagnosis\\src\\TechnicalDiagnosis.DataLayer\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Ebrahim\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.0": {
+            "projectReferences": {
+              "C:\\Users\\Ebrahim\\Desktop\\TechnicalDiagnosis\\src\\TechnicalDiagnosis.DomainClasses\\TechnicalDiagnosis.DomainClasses.csproj": {
+                "projectPath": "C:\\Users\\Ebrahim\\Desktop\\TechnicalDiagnosis\\src\\TechnicalDiagnosis.DomainClasses\\TechnicalDiagnosis.DomainClasses.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.0": {
+          "dependencies": {
+            "Microsoft.AspNetCore.Http": {
+              "target": "Package",
+              "version": "[2.2.2, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.EntityFrameworkCore.Tools": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Binder": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[3.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\Ebrahim\\Desktop\\TechnicalDiagnosis\\src\\TechnicalDiagnosis.DomainClasses\\TechnicalDiagnosis.DomainClasses.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\Ebrahim\\Desktop\\TechnicalDiagnosis\\src\\TechnicalDiagnosis.DomainClasses\\TechnicalDiagnosis.DomainClasses.csproj",
+        "projectName": "TechnicalDiagnosis.DomainClasses",
+        "projectPath": "C:\\Users\\Ebrahim\\Desktop\\TechnicalDiagnosis\\src\\TechnicalDiagnosis.DomainClasses\\TechnicalDiagnosis.DomainClasses.csproj",
+        "packagesPath": "C:\\Users\\Ebrahim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Ebrahim\\Desktop\\TechnicalDiagnosis\\src\\TechnicalDiagnosis.DomainClasses\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\Ebrahim\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.0": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.0": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.0.100\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}
