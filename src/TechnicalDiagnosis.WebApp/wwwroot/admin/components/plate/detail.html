@@ -1,0 +1,113 @@
+<!-- begin:: Subheader -->
+<div class="kt-subheader   kt-grid__item" id="kt_subheader">
+    <div class="kt-container  kt-container--fluid ">
+        <div class="kt-subheader__main">
+            <h3 class="kt-subheader__title">
+
+                {{ page.title}} </h3>
+
+            <span class="kt-subheader__separator kt-hidden"></span>
+            <div class="kt-subheader__breadcrumbs">
+                <a href="#" class="kt-subheader__breadcrumbs-home"><i class="flaticon2-shelter"></i></a>
+                {{ #breadCrumb }}
+                <span class="kt-subheader__breadcrumbs-separator"></span>
+                <a href="{{ link }}" class="routing-link kt-subheader__breadcrumbs-link">{{ title }} </a>
+                {{ /breadCrumb }}
+                <span class="kt-subheader__breadcrumbs-separator"></span>
+                <span class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">{{ page.title }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- end:: Subheader -->
+<!-- begin:: Content -->
+<div class="kt-container  kt-container--fluid  kt-grid__item kt-grid__item--fluid">
+    <div class="row">
+        <div class="col-lg-12">
+            <!--begin::Portlet-->
+            <div class="kt-portlet kt-portlet--last kt-portlet--head-lg kt-portlet--responsive-mobile"
+                id="kt_page_portlet">
+                <div class="kt-portlet__head kt-portlet__head--lg">
+                    <div class="kt-portlet__head-label">
+                        <h3 class="kt-portlet__head-title">{{ page.title }}</h3>
+                    </div>
+                    <div class="kt-portlet__head-toolbar">
+                        <a href="{{ page.backward }}" class="routing-link btn btn-clean kt-margin-r-10">
+                            <i class="la la-arrow-right"></i>
+                            <span class="kt-hidden-mobile">بازگشت</span>
+                        </a>
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-brand" id="saveData">
+                                <i class="la la-check"></i>
+                                <span class="kt-hidden-mobile">ذخیره</span>
+                            </button>
+                            <button type="button" class="btn btn-brand dropdown-toggle dropdown-toggle-split"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <ul class="kt-nav">
+                                    <li class="kt-nav__item">
+                                        <a href="#" class="kt-nav__link">
+                                            <i class="kt-nav__link-icon flaticon2-add-1"></i>
+                                            <span class="kt-nav__link-text">ذخیره و جدید</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kt-portlet__body">
+                    <form class="kt-form" id="kt_form">
+                        <div class="row">
+                            <div class="col-xl-2"></div>
+                            <div class="col-xl-8">
+                                <div class="kt-section kt-section--first">
+                                    <div class="kt-section__body">
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label">نام‌و‌نام‌خانوادگی</label>
+                                            <div class="col-9">
+                                                <input class="form-control" type="text" id="title" name="Title" placeholder="برای مثال: ابراهیم حمزه" value="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label">شماره‌موبایل</label>
+                                            <div class="col-9">
+                                                <input class="form-control" type="number" id="title" name="Title" placeholder="برای مثال: 09379558813" value="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label">نوع‌وسیله‌ی‌نقلیه</label>
+                                            <div class="col-9">
+                                                <select class="form-control" id="exampleSelectd">
+                                                    <option>شخصی</option>
+                                                    <option>عمومی 180 روزه</option>
+                                                    <option>عمومی 90 روزه</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label">شماره‌پلاک</label>
+                                            <div class="col-9">
+                                                <input class="form-control" type="number" id="title" name="Title" placeholder="برای مثال: 09379558813" value="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group row">
+                                            <label class="col-3 col-form-label">تاریخ مراجعه</label>
+                                            <div class="col-9">
+                                                <input class="form-control" type="text" id="serviceDate" name="ServiceDate">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-2"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--end::Portlet-->
+        </div>
+    </div>
+</div>
+<!-- end:: Content -->

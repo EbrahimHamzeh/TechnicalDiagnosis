@@ -69,7 +69,7 @@ namespace TechnicalDiagnosis.WebApp.Controllers
 
             _antiforgery.RegenerateAntiForgeryCookies(result.Claims);
 
-            return Ok(new { access_token = result.AccessToken, refresh_token = result.RefreshToken });
+            return Ok(new { access_token = result.AccessToken, refresh_token = result.RefreshToken, display_name = user.DisplayName  });
         }
 
         [AllowAnonymous]
