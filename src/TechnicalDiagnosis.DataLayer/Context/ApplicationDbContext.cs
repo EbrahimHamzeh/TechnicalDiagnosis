@@ -13,6 +13,8 @@ namespace TechnicalDiagnosis.DataLayer.Context
         public virtual DbSet<Role> Roles { set; get; }
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<UserToken> UserTokens { get; set; }
+        public virtual DbSet<Plate> Plates { get; set; }
+        public virtual DbSet<TypeVehicle> TypeVehicles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -54,6 +56,7 @@ namespace TechnicalDiagnosis.DataLayer.Context
                 entity.Property(ut => ut.RefreshTokenIdHash).HasMaxLength(450).IsRequired();
                 entity.Property(ut => ut.RefreshTokenIdHashSource).HasMaxLength(450);
             });
+
         }
     }
 }
