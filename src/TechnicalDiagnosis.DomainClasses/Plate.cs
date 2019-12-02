@@ -30,8 +30,8 @@ namespace TechnicalDiagnosis.DomainClasses
 
         public bool IsTechnicalDiagnosis { get; set; }
 
-        public virtual int TypeVehicleId { get; set; }
-        public virtual TypeVehicle TypeVehicle { get; set; }
+        public virtual int? TypeVehicleId { get; set; }
+        public virtual TypeVehicle? TypeVehicle { get; set; }
 
         public string Description { get; set; }
     }

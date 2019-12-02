@@ -280,6 +280,7 @@ C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.WebApp\bin\De
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.WebApp\bin\Debug\netcoreapp3.0\refs\WindowsBase.dll
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.WebApp\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.WebApp.Views.dll
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.WebApp\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.WebApp.Views.pdb
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.WebApp\bin\Debug\netcoreapp3.0\DNTPersianUtils.Core.dll
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.WebApp\bin\Debug\netcoreapp3.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.WebApp\bin\Debug\netcoreapp3.0\Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore.dll
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.WebApp\bin\Debug\netcoreapp3.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll

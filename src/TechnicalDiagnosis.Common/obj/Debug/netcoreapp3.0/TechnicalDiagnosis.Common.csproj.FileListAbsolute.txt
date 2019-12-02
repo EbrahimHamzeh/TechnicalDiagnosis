@@ -1,6 +1,7 @@
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Common\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.Common.deps.json
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Common\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.Common.dll
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Common\bin\Debug\netcoreapp3.0\TechnicalDiagnosis.Common.pdb
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Common\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.Common.csprojAssemblyReference.cache
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Common\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.Common.AssemblyInfoInputs.cache
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Common\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.Common.AssemblyInfo.cs
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.Common\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.Common.dll
