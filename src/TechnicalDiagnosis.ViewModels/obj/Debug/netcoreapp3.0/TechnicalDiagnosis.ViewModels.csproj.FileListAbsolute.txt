@@ -5,3 +5,4 @@ C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.ViewModels\ob
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.ViewModels\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.ViewModels.AssemblyInfo.cs
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.ViewModels\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.ViewModels.dll
 C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.ViewModels\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.ViewModels.pdb
+C:\Users\Ebrahim\Desktop\TechnicalDiagnosis\src\TechnicalDiagnosis.ViewModels\obj\Debug\netcoreapp3.0\TechnicalDiagnosis.ViewModels.csprojAssemblyReference.cache

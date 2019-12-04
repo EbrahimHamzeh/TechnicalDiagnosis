@@ -168,18 +168,24 @@ routing.route('/plate/add', 'components/plate/detail.html', function (template) 
 
     $("#serviceDate").pDatepicker({ format: 'YYYY/MM/DD' });
 
-    // document.getElementById("saveData").addEventListener("click", function (e) {
-    //     notification.getStart();
-    //     var fields = {
-    //         name: document.getElementById("title").value,
-    //         data: document.getElementById("data").value,
-    //         price: document.getElementById("price").value
-    //     }
+    document.getElementById("saveData").addEventListener("click", function (e) {
+        notification.getStart();
+        var fields = {
+            fullName: document.getElementById("fullName").value,
+            mobile: document.getElementById("mobile").value,
+            PlateState: document.getElementById("plateState").value,
+            PlateAlphabet: document.getElementById("plateAlphabet").value,
+            PlateFirstNumber: document.getElementById("plateFirstNumber").value,
+            PlateLastNumber: document.getElementById("plateLastNumber").value,
+            Description: document.getElementById("description").value,
+            IsTechnicalDiagnosis: document.getElementById("isTechnicalDiagnosis").checked,
+            ServiceDate: document.getElementById("serviceDate").value,
+        }
 
-    //     APIs.setPackage(0, fields, function () {
-    //         routing.changeRouteWithPushState(data.page.backward)
-    //     });
-    // });
+        APIs.setPlate(fields, function () {
+            routing.changeRouteWithPushState(data.page.backward)
+        });
+    });
 
 });
 
@@ -223,41 +229,21 @@ var APIs = {
             fixedHeader: true,
             stateSave: true,
             columnDefs: [
-                { title: "ردیف", targets: 0, width: "5%", className: "text-center" },
-                { title: "نام‌و‌نام‌خانوادگی", targets: 1, width: "20%", className: "text-center" },
-                { title: "شماره‌موبایل", targets: 2, width: "20%", className: "text-center" },
-                { title: "شماره‌پلاک", targets: 3, width: "20%", className: "text-center" },
-                { title: "نوع‌وسیله‌ی‌نقلیه", targets: 4, width: "5%", className: "text-center" },
-                { title: "تاریخ‌مراجعه", targets: 5, width: "10%", className: "text-center" },
-                { title: "وضعیت", targets: 6, width: "10%", className: "text-center" },
-                { title: "عملیات", targets: 7, width: "10%", className: "text-center" }
+                { title: "نام‌و‌نام‌خانوادگی", targets: 0, width: "20%", className: "text-center" },
+                { title: "شماره‌موبایل", targets: 1, width: "20%", className: "text-center" },
+                { title: "شماره‌پلاک", targets: 2, width: "20%", className: "text-center" },
+                { title: "نوع‌وسیله‌ی‌نقلیه", targets: 3, width: "5%", className: "text-center" },
+                { title: "تاریخ‌مراجعه", targets: 4, width: "10%", className: "text-center" },
+                { title: "توضیحات", targets: 5, width: "10%", className: "text-center" },
+                { title: "عملیات", targets: 6, width: "10%", className: "text-center" }
             ],
             columns: [
-                { data: 'counter', mRender: function (data, type, full) { return data.toString(); } },
-                { data: 'name' },
-                { data: 'price', mRender: function (data, type, full) { return "{0} ریال".format(Number(data).toFixed(0).toString().numberWithCommas()); } },
-                { data: 'data', mRender: function (data, type, full) { return "{0} Mb".format(Number(data).toFixed(0).toString().numberWithCommas()); } },
-                {
-                    data: 'status',
-                    mRender: function (data, type, full) {
-                        var status = {
-                            0: { 'title': 'غیرفعال', 'class': ' kt-badge--primary' },
-                            1: { 'title': 'فعال', 'class': ' kt-badge--success' },
-                        };
-                        return '<span class="kt-badge ' + status[data].class + ' kt-badge--inline kt-badge--pill">' + status[data].title + '</span>';
-                    }
-                },
-                {
-                    data: 'id',
-                    mRender: function (data, type, full) {
-                        return '<div class="input-group">' +
-                            '<input type="number" class="form-control" placeholder="افزودن کد">' +
-                            '<div class="input-group-append">' +
-                            '<button class="btn btn-primary add-new-code-package" data-id="' + data + '"  type="button">ثبت!</button>' +
-                            '</div>' +
-                            '</div>'
-                    }
-                },
+                { data: 'fullName' },
+                { data: 'mobile' },
+                { data: 'price', mRender: function (data, type, full) { return "ایران{0} {1} {2} {3}".format(full.plateState, full.plateFirstNumber, full.plateAlphabet, full.plateLastNumber); } },
+                { data: 'typeVehicleId' },
+                { data: 'serviceDate' },
+                { data: 'description' },
                 {
                     data: 'id',
                     mRender: function (data, type, full) {
@@ -288,17 +274,16 @@ var APIs = {
             serverSide: true,
             searching: false,
             ajax: function (data, callback, settings) {
-                var dataRequest = { action: "SHALPAED", info: { page: (data.start / data.length) + 1, count: data.length } };
+                // var dataRequest = { action: "SHALPAED", info: { page: (data.start / data.length) + 1, count: data.length } };
                 $.ajax({
                     type: "POST",
-                    url: APIs.serverAddress,
-                    headers: { 'authorizationfield': localStorage.getItem("token") },
+                    url: "/api/Plate/List?page={0}&size={1}".format((data.start / data.length) + 1, data.length),
+                    headers: { 'Authorization': "Bearer " + localStorage.getItem("token") },
                     contentType: "application/x-www-form-urlencoded; charset=utf-8",
-                    data: APIs.convertData(dataRequest),
                     success: function (response) {
-                        if (response.statusCode == 0) {
+                        if (response.rows) {
                             draw = draw + 1;
-                            callback({ data: response.data, draw: draw, recordsFiltered: response.total, recordsTotal: response.total });
+                            callback({ data: response.rows, draw: draw, recordsFiltered: response.total, recordsTotal: response.total });
                         } else {
                             notification.showDanger(response && response.data && response.data.message ? response.data.message : "مشکلی در ارتباط به وجود آمده است");
                         }
@@ -329,425 +314,23 @@ var APIs = {
         });
     },
 
-    // //  انجام عملیات حذف و فعال و غیرفعال به همراه سوال از کاربر
-    // setGlobalActionPrompt(action, id) {
-    //     swal.fire({
-    //         title: 'مطمئن هستید؟',
-    //         text: "آیا از انجام عملیات مطمئن هستید؟",
-    //         type: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonText: 'بله',
-    //         cancelButtonText: 'کنسل',
-    //         reverseButtons: true
-    //     }).then(function (result) {
-    //         if (result.value) {
-    //             this.setGlobalAction(action, id)
-    //         } else if (result.dismiss === 'cancel') {
-    //             notification.showWarning("عملیات لغو شد.");
-    //         }
-    //     });
-    // },
-
-    // // انجام عملیات حذف و فعال و غیرفعال
-    // setGlobalAction(action, id) {
-    //     notification.getStart();
-    //     var dataRequest = { action: action, info: { id: id } };
-    //     $.ajax({
-    //         type: "POST",
-    //         url: this.serverAddress,
-    //         headers: { 'authorizationfield': localStorage['token'] },
-    //         contentType: "application/x-www-form-urlencoded; charset=utf-8",
-    //         data: this.convertData(dataRequest),
-    //         success: function (response) {
-    //             if (response.statusCode == 0) {
-    //                 notification.getDone();
-    //                 $($('table[id^="table"]')[0]).DataTable().ajax.reload(null, false);
-    //             } else {
-    //                 notification.getDanger(response && response.data && response.data.message ? response.data.message : "");
-    //             }
-    //         }
-    //     });
-    // },
-
-    // getAllPackage(elementId) {
-    //     var draw = 0;
-    //     $(document.getElementById(elementId)).DataTable({
-    //         language: dataTablePersian,
-    //         responsive: true,
-    //         ordering: false,
-    //         fixedHeader: true,
-    //         stateSave: true,
-    //         columnDefs: [
-    //             { title: "ردیف", targets: 0, width: "10%", className: "text-center" },
-    //             { title: "عنوان", targets: 1, width: "30%", className: "text-center" },
-    //             { title: "قیمت", targets: 2, width: "15%", className: "text-center" },
-    //             { title: "حجم", targets: 3, width: "10%", className: "text-center" },
-    //             { title: "وضعیت", targets: 4, width: "10%", className: "text-center" },
-    //             { title: "افزودن کد", targets: 5, width: "15%", className: "text-center" },
-    //             { title: "عملیات", targets: 6, width: "10%", className: "text-center" }
-    //         ],
-    //         columns: [
-    //             { data: 'counter', mRender: function (data, type, full) { return data.toString(); } },
-    //             { data: 'name' },
-    //             { data: 'price', mRender: function (data, type, full) { return "{0} ریال".format(Number(data).toFixed(0).toString().numberWithCommas()); } },
-    //             { data: 'data', mRender: function (data, type, full) { return "{0} Mb".format(Number(data).toFixed(0).toString().numberWithCommas()); } },
-    //             {
-    //                 data: 'status',
-    //                 mRender: function (data, type, full) {
-    //                     var status = {
-    //                         0: { 'title': 'غیرفعال', 'class': ' kt-badge--primary' },
-    //                         1: { 'title': 'فعال', 'class': ' kt-badge--success' },
-    //                     };
-    //                     return '<span class="kt-badge ' + status[data].class + ' kt-badge--inline kt-badge--pill">' + status[data].title + '</span>';
-    //                 }
-    //             },
-    //             {
-    //                 data: 'id',
-    //                 mRender: function (data, type, full) {
-    //                     return '<div class="input-group">' +
-    //                         '<input type="number" class="form-control" placeholder="افزودن کد">' +
-    //                         '<div class="input-group-append">' +
-    //                         '<button class="btn btn-primary add-new-code-package" data-id="' + data + '"  type="button">ثبت!</button>' +
-    //                         '</div>' +
-    //                         '</div>'
-    //                 }
-    //             },
-    //             {
-    //                 data: 'id',
-    //                 mRender: function (data, type, full) {
-    //                     var status = "";
-    //                     if (full.status)
-    //                         status = '<a class="dropdown-item" href="javascript:APIs.setGlobalAction(\'DACAPAED\',' + data + ');"><i class="la la-eject"></i> غیرفعال</a>';
-    //                     else
-    //                         status = '<a class="dropdown-item" href="javascript:APIs.setGlobalAction(\'ACTAPAED\',' + data + ');"><i class="la la-check"></i> فعال</a>';
-    //                     return '<span class="dropdown">' +
-    //                         '<a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">' +
-    //                         '<i class="la la-ellipsis-h"></i>' +
-    //                         '</a>' +
-    //                         '<div class="dropdown-menu dropdown-menu-right">' +
-    //                         '<a class="routing-link dropdown-item" href="package/edit/' + data + '"><i class="la la-edit"></i> ویرایش</a>' +
-    //                         '<a class="routing-link dropdown-item" href="package/codes/' + data + '"><i class="la la-cc-mastercard"></i> نمایش‌کدها &nbsp&nbsp&nbsp&nbsp<span class="kt-badge kt-badge--brand kt-badge--md">' + full.count + '</span></a>' +
-    //                         '<a class="routing-link dropdown-item" href="javascript:APIs.showModalImportCode(' + data + ');"><i class="la la-space-shuttle"></i> ایمپورت‌کدها</a>' +
-    //                         '<a class="dropdown-item" href="javascript:APIs.setGlobalActionPrompt(\'REMAPAED\',' + data + ');"><i class="la la-remove"></i> حذف</a>' +
-    //                         status +
-    //                         '</div>' +
-    //                         '</span>' +
-    //                         '<a href="package/edit/' + data + '" class="routing-link btn btn-sm btn-clean btn-icon btn-icon-md" title="ویرایش">' +
-    //                         '<i class="la la-edit"></i>' +
-    //                         '</a>';
-    //                 }
-    //             }
-    //         ],
-    //         processing: true,
-    //         serverSide: true,
-    //         searching: false,
-    //         ajax: function (data, callback, settings) {
-    //             var dataRequest = { action: "SHALPAED", info: { page: (data.start / data.length) + 1, count: data.length } };
-    //             $.ajax({
-    //                 type: "POST",
-    //                 url: APIs.serverAddress,
-    //                 headers: { 'authorizationfield': localStorage.getItem("token") },
-    //                 contentType: "application/x-www-form-urlencoded; charset=utf-8",
-    //                 data: APIs.convertData(dataRequest),
-    //                 success: function (response) {
-    //                     if (response.statusCode == 0) {
-    //                         draw = draw + 1;
-    //                         callback({ data: response.data, draw: draw, recordsFiltered: response.total, recordsTotal: response.total });
-    //                     } else {
-    //                         notification.showDanger(response && response.data && response.data.message ? response.data.message : "مشکلی در ارتباط به وجود آمده است");
-    //                     }
-    //                 }
-    //             });
-    //         },
-    //         drawCallback: function (settings) {
-    //             routing.addRoutingEventToLinks();
-    //             var menus = document.querySelectorAll(".add-new-code-package")
-    //             for (var i = 0; i < menus.length; i++) {
-    //                 menus[i].addEventListener("click", function (e) {
-    //                     event.preventDefault()
-    //                     var element = event.target;
-    //                     notification.getStart();
-    //                     var id = element.getAttribute("data-id");
-    //                     var codeElement = element.parentElement.parentElement.getElementsByTagName("input")[0];
-    //                     if (codeElement) var code = codeElement.value;
-    //                     if (id && code) {
-    //                         APIs.setCode(id, code, function () {
-    //                             codeElement.value = "";
-    //                         });
-    //                     } else {
-    //                         notification.showWarning("اطلاعات نامعتبر است")
-    //                     }
-    //                 });
-    //             }
-    //         }
-    //     });
-    // },
-
-    // getAllPackageCodes(elementId, packageId) {
-    //     var dataRequest = { action: "GECODOPAED", info: { id: packageId } };
-    //     $.ajax({
-    //         type: "POST",
-    //         url: this.serverAddress,
-    //         headers: { 'authorizationfield': localStorage['token'] },
-    //         contentType: "application/x-www-form-urlencoded; charset=utf-8",
-    //         data: this.convertData(dataRequest),
-    //         success: function (response) {
-    //             $(document.getElementById(elementId)).DataTable({
-    //                 language: dataTablePersian,
-    //                 responsive: true,
-    //                 ordering: true,
-    //                 data: response.data,
-    //                 searching: true,
-    //                 pageLength: 50,
-    //                 fixedHeader: true,
-    //                 stateSave: true,
-    //                 columnDefs: [
-    //                     { title: "ردیف", targets: 0, width: "10%", className: "text-center" },
-    //                     { title: "کد", targets: 1, width: "50%", className: "text-center" },
-    //                     { title: "وضعیت", targets: 2, width: "10%", className: "text-center" },
-    //                     { title: "عملیات", targets: 3, width: "10%", className: "text-center" }
-    //                 ],
-    //                 responsive: true,
-    //                 columns: [
-    //                     { data: 'counter', mRender: function (data, type, full) { return data.toString(); } },
-    //                     { data: 'code' },
-    //                     {
-    //                         data: 'status',
-    //                         mRender: function (data, type, full) {
-    //                             var status = {
-    //                                 0: { 'title': 'غیرفعال', 'class': ' kt-badge--primary' },
-    //                                 1: { 'title': 'فعال', 'class': ' kt-badge--success' },
-    //                                 2: { 'title': 'درحال‌فروش', 'class': ' kt-badge--warning' },
-    //                                 3: { 'title': 'فروخته‌شده', 'class': ' kt-badge--brand' },
-    //                             };
-    //                             return '<span class="kt-badge ' + status[data].class + ' kt-badge--inline kt-badge--pill">' + status[data].title + '</span>';
-    //                         }
-    //                     },
-    //                     {
-    //                         data: 'id',
-    //                         mRender: function (data, type, full) {
-    //                             var status = "";
-    //                             if (full.status == 1)
-    //                                 status = '<a class="dropdown-item" href="javascript:APIs.setGlobalAction(\'DACACOD\',' + data + ');"><i class="la la-eject"></i> غیرفعال</a>';
-    //                             else if (full.status == 0)
-    //                                 status = '<a class="dropdown-item" href="javascript:APIs.setGlobalAction(\'ACTACOD\',' + data + ');"><i class="la la-check"></i> فعال</a>';
-    //                             return '<span class="dropdown">' +
-    //                                 '<a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">' +
-    //                                 '<i class="la la-ellipsis-h"></i>' +
-    //                                 '</a>' +
-    //                                 '<div class="dropdown-menu dropdown-menu-right">' +
-    //                                 '<a class="dropdown-item" href="javascript:APIs.setGlobalActionPrompt(\'REMACOD\',' + data + ');"><i class="la la-remove"></i> حذف</a>' +
-    //                                 status +
-    //                                 '</div>' +
-    //                                 '</span>'
-    //                         }
-    //                     }
-    //                 ],
-    //             });
-    //         }
-    //     });
-    // },
-
-    // getPackage(id, callback) {
-    //     var dataRequest = { action: "GETAEDPAC", info: { id: id } };
-    //     $.ajax({
-    //         type: "POST",
-    //         url: this.serverAddress,
-    //         headers: { 'authorizationfield': localStorage['token'] },
-    //         contentType: "application/x-www-form-urlencoded; charset=utf-8",
-    //         data: this.convertData(dataRequest),
-    //         success: function (response) {
-    //             if (response.statusCode == 0) {
-    //                 callback(response.data);
-    //             } else {
-    //                 notification.showDanger(response && response.data && response.data.message ? response.data.message : "مشکلی در ارتباط به وجود آمده است");
-    //             }
-    //         }
-    //     });
-    // },
-
-    // setPackage(id, info, callback) {
-    //     var dataRequest = { action: "ADANPAKED", info: info };
-    //     if (id) {
-    //         dataRequest.info.id = id;
-    //         dataRequest.action = "EDAPACED"
-    //     }
-    //     $.ajax({
-    //         type: "POST",
-    //         url: this.serverAddress,
-    //         headers: { 'authorizationfield': localStorage['token'] },
-    //         contentType: "application/x-www-form-urlencoded; charset=utf-8",
-    //         data: this.convertData(dataRequest),
-    //         success: function (response) {
-    //             if (response.statusCode == 0) {
-    //                 // new notification({ text: Resource.notification.Success, type: 'success' }).show()
-    //                 notification.getDone();
-    //                 callback();
-    //             } else {
-    //                 // new notification({ text: Resource.notification.Error.format(response.data.message), type: 'error' }).show()
-    //                 notification.getDanger();
-    //             }
-    //         }
-    //     });
-    // },
-
-    // getAllCode(elementId) {
-    //     var draw = 0;
-    //     $(document.getElementById(elementId)).DataTable({
-    //         language: dataTablePersian,
-    //         responsive: true,
-    //         ordering: false,
-    //         fixedHeader: true,
-    //         stateSave: true,
-    //         columnDefs: [
-    //             { title: "ردیف", targets: 0, width: "10%", className: "text-center" },
-    //             { title: "کد", targets: 1, width: "50%", className: "text-center" },
-    //             { title: "وضعیت", targets: 2, width: "10%", className: "text-center" },
-    //             { title: "عملیات", targets: 3, width: "10%", className: "text-center" }
-    //         ],
-    //         columns: [
-    //             { data: 'counter', mRender: function (data, type, full) { return data.toString(); } },
-    //             { data: 'code' },
-    //             {
-    //                 data: 'status',
-    //                 mRender: function (data, type, full) {
-    //                     var status = {
-    //                         0: { 'title': 'غیرفعال', 'class': ' kt-badge--primary' },
-    //                         1: { 'title': 'فعال', 'class': ' kt-badge--success' },
-    //                         2: { 'title': 'درحال‌فروش', 'class': ' kt-badge--warning' },
-    //                         3: { 'title': 'فروخته‌شده', 'class': ' kt-badge--brand' },
-    //                     };
-    //                     return '<span class="kt-badge ' + status[data].class + ' kt-badge--inline kt-badge--pill">' + status[data].title + '</span>';
-    //                 }
-    //             },
-    //             {
-    //                 data: 'id',
-    //                 mRender: function (data, type, full) {
-    //                     var status = "";
-    //                     if (full.status == 1)
-    //                         status = '<a class="dropdown-item" href="javascript:APIs.setGlobalAction(\'DACACOD\',' + data + ');"><i class="la la-eject"></i> غیرفعال</a>';
-    //                     else if (full.status == 0)
-    //                         status = '<a class="dropdown-item" href="javascript:APIs.setGlobalAction(\'ACTACOD\',' + data + ');"><i class="la la-check"></i> فعال</a>';
-    //                     return '<span class="dropdown">' +
-    //                         '<a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">' +
-    //                         '<i class="la la-ellipsis-h"></i>' +
-    //                         '</a>' +
-    //                         '<div class="dropdown-menu dropdown-menu-right">' +
-    //                         '<a class="dropdown-item" href="javascript:APIs.setGlobalActionPrompt(\'REMACOD\',' + data + ');"><i class="la la-remove"></i> حذف</a>' +
-    //                         status +
-    //                         '</div>' +
-    //                         '</span>'
-    //                 }
-    //             }
-    //         ],
-    //         processing: true,
-    //         serverSide: true,
-    //         searching: false,
-    //         ajax: function (data, callback, settings) {
-    //             var dataRequest = { action: "SHALCO", info: { page: (data.start / data.length) + 1, count: data.length } };
-    //             $.ajax({
-    //                 type: "POST",
-    //                 url: APIs.serverAddress,
-    //                 headers: { 'authorizationfield': localStorage.getItem("token") },
-    //                 contentType: "application/x-www-form-urlencoded; charset=utf-8",
-    //                 data: APIs.convertData(dataRequest),
-    //                 success: function (response) {
-    //                     if (response.statusCode == 0) {
-    //                         draw = draw + 1;
-    //                         callback({ data: response.data, draw: draw, recordsFiltered: response.total, recordsTotal: response.total });
-    //                     } else {
-    //                         notification.showDanger(response && response.data && response.data.message ? response.data.message : "مشکلی در ارتباط به وجود آمده است");
-    //                         // new notification({ text: Resource.notification.Error.format(response.data.message), type: 'error' }).show()
-    //                     }
-    //                 }
-    //             });
-    //         }
-    //     });
-    // },
-
-    // setCode(packageId, code, callback) {
-    //     var dataRequest = { action: "ADANCO", info: { package_id: packageId, code: code } };
-    //     $.ajax({
-    //         type: "POST",
-    //         url: this.serverAddress,
-    //         headers: { 'authorizationfield': localStorage['token'] },
-    //         contentType: "application/x-www-form-urlencoded; charset=utf-8",
-    //         data: this.convertData(dataRequest),
-    //         success: function (response) {
-    //             if (response.statusCode == 0) {
-    //                 notification.getDone();
-    //                 callback();
-    //             } else {
-    //                 notification.getDanger(response && response.data && response.data.message ? response.data.message : "");
-    //             }
-    //         }
-    //     });
-    // },
-
-    // showModalImportCode(packageId) {
-    //     var isShowImportCodeInPackage = localStorage.getItem("isShowImportCodeInPackage");
-    //     // if (!isShowImportCodeInPackage) {
-    //     document.getElementById("importData").modal('show')
-    //     // }
-    // },
-
-    // getAllTransaction(elementId) {
-    //     var draw = 0;
-    //     $(document.getElementById(elementId)).DataTable({
-    //         language: dataTablePersian,
-    //         responsive: true,
-    //         ordering: false,
-    //         fixedHeader: true,
-    //         stateSave: true,
-    //         columnDefs: [
-    //             { title: "ردیف", targets: 0, width: "10%", className: "text-center" },
-    //             { title: "کاربر", targets: 1, width: "20%", className: "text-center" },
-    //             { title: "مبلغ", targets: 2, width: "20%", className: "text-center" },
-    //             { title: "کد", targets: 3, width: "20%", className: "text-center" },
-    //             { title: "وضعیت", targets: 4, width: "10%", className: "text-center" },
-    //             { title: "تاریخ", targets: 5, width: "20%", className: "text-center" },
-    //         ],
-    //         columns: [
-    //             { data: 'counter', mRender: function (data, type, full) { return data.toString(); } },
-    //             { data: 'user' },
-    //             { data: 'price', mRender: function (data, type, full) { return "{0} ریال".format(Number(data).toFixed(0).toString().numberWithCommas()); } },
-    //             { data: 'code' },
-    //             {
-    //                 data: 'status',
-    //                 mRender: function (data, type, full) {
-    //                     var status = {
-    //                         0: { 'title': 'غیرفعال', 'class': ' kt-badge--primary' },
-    //                         1: { 'title': 'فعال', 'class': ' kt-badge--success' },
-    //                     };
-    //                     return '<span class="kt-badge ' + status[data].class + ' kt-badge--inline kt-badge--pill">' + status[data].title + '</span>';
-    //                 }
-    //             },
-    //             { data: 'created_at' },
-    //         ],
-    //         processing: true,
-    //         serverSide: true,
-    //         searching: false,
-    //         ajax: function (data, callback, settings) {
-    //             var dataRequest = { action: "SHALTRAN", info: { page: (data.start / data.length) + 1, count: data.length } };
-    //             $.ajax({
-    //                 type: "POST",
-    //                 url: APIs.serverAddress,
-    //                 headers: { 'authorizationfield': localStorage.getItem("token") },
-    //                 contentType: "application/x-www-form-urlencoded; charset=utf-8",
-    //                 data: APIs.convertData(dataRequest),
-    //                 success: function (response) {
-    //                     if (response.statusCode == 0) {
-    //                         draw = draw + 1;
-    //                         callback({ data: response.data, draw: draw, recordsFiltered: response.total, recordsTotal: response.total });
-    //                     } else {
-    //                         notification.showDanger(response && response.data && response.data.message ? response.data.message : "مشکلی در ارتباط به وجود آمده است");
-    //                         // new notification({ text: Resource.notification.Error.format(response.data.message), type: 'error' }).show()
-    //                     }
-    //                 }
-    //             });
-    //         }
-    //     });
-    // },
+    setPlate(info, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/api/Plate/Add",
+            headers: { 'Authorization': "Bearer " + localStorage.getItem("token") },
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify(info),
+            success: function (response) {
+                if (response.error.length) {
+                    notification.getDanger(response.error);
+                } else {
+                    notification.getDone();
+                    callback();
+                }
+            }
+        });
+    },
 }
 
 var extention = {

@@ -18,6 +18,7 @@ using TechnicalDiagnosis.ViewModels;
 namespace TechnicalDiagnosis.WebApp.Controllers
 {
     [Route("api/[controller]")]
+    [Produces("application/json")]
     [Authorize(Policy = CustomRoles.Admin)]
     public class PlateController : Controller
     {
@@ -66,36 +67,13 @@ namespace TechnicalDiagnosis.WebApp.Controllers
             return Ok(new { error = ModelState.AllMessage() });
         }
 
-        // [IgnoreAntiforgeryToken]
-        // [HttpPost("[action]")]
-        // public async Task<IActionResult> List()
-        // {
-        //     if (ModelState.IsValid)
-        //     {
-        //         var result = await _plateService.Insert(new Plate
-        //         {
-        //             FullName = model.FullName,
-        //             Mobile = model.Mobile,
-        //             PlateAlphabet = model.PlateAlphabet,
-        //             PlateFirstNumber = model.PlateFirstNumber,
-        //             PlateLastNumber = model.PlateLastNumber,
-        //             Description = model.Description,
-        //             IsTechnicalDiagnosis = model.IsTechnicalDiagnosis,
-        //             IsActive = true,
-        //             PlateState = model.PlateState,
-        //             ServiceDate = model.ServiceDate.ToGregorianDateTime() ?? DateTime.Now,
-        //         });
-
-        //         if (result)
-        //         {
-        //             await _uow.SaveChangesAsync();
-        //             return Ok();
-        //         }
-        //         else return Ok(new { error = "متاسفانه مشکلی در ثبت اطلاعات به وجود آمده است." });
-        //     }
-
-        //     return Ok(new { error = ModelState.AllMessage() });
-        // }
+        [IgnoreAntiforgeryToken]
+        [HttpPost("[action]")]
+        public async Task<IActionResult> List([FromQuery] int page,[FromQuery] int size)
+        {
+            var result = await _plateService.DataTableList(page, size);
+            return Json(result);
+        }
 
         // [AllowAnonymous]
         // [IgnoreAntiforgeryToken]

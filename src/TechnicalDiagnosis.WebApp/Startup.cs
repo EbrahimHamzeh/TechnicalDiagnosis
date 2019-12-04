@@ -193,7 +193,7 @@ namespace TechnicalDiagnosis.WebApp
             }
 
             app.UseStatusCodePages();
-            // app.UseDefaultFiles(); // so index.html is not required
+            app.UseDefaultFiles(); // so index.html is not required
             app.UseStaticFiles();
 
             app.UseRouting();
