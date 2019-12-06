@@ -166,6 +166,7 @@ routing.route('/plate/add', 'components/plate/detail.html', function (template) 
     routing.ganarateTemplate(data, template);
     KTLayout.initPageStickyPortlet();
 
+    APIs.getAllPlate("tablePlate");
     $("#serviceDate").pDatepicker({ format: 'YYYY/MM/DD' });
 
     document.getElementById("saveData").addEventListener("click", function (e) {
@@ -322,7 +323,7 @@ var APIs = {
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(info),
             success: function (response) {
-                if (response.error.length) {
+                if (response && response.error && response.error.length) {
                     notification.getDanger(response.error);
                 } else {
                     notification.getDone();

@@ -62,8 +62,7 @@ namespace TechnicalDiagnosis.WebApp
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")
-                                 .Replace("|DataDirectory|", Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "app_data")),
+                    Configuration.GetConnectionString("DefaultConnection"),
                     serverDbContextOptionsBuilder =>
                         {
                             var minutes = (int)TimeSpan.FromMinutes(3).TotalSeconds;
