@@ -131,7 +131,7 @@ var routing = {
 
 routing.route('/dashboard', 'components/dashboard.html', function (template) {
     routing.ganarateTemplate({}, template);
-    // KTDashboard.init();
+
     $('.maxlength').maxlength({
         warningClass: "kt-badge kt-badge--warning kt-badge--rounded kt-badge--inline",
         limitReachedClass: "kt-badge kt-badge--success kt-badge--rounded kt-badge--inline"
@@ -144,8 +144,7 @@ routing.route('/dashboard', 'components/dashboard.html', function (template) {
         var myLength = target.value.length;
         var next = target.getAttribute("data-nextelement");
         var prev = target.getAttribute("data-prevelement");
-        if(e.keyCode == 8 && myLength == 0 && prev)
-        {
+        if (e.keyCode == 8 && myLength == 0 && prev) {
             document.getElementById(prev).focus();
         }
         if (myLength >= maxLength && next) {
@@ -153,7 +152,7 @@ routing.route('/dashboard', 'components/dashboard.html', function (template) {
         }
     }
 
-    container.onkeypress = function(e) {
+    container.onkeypress = function (e) {
         var target = e.srcElement;
         var maxLength = parseInt(target.attributes["maxlength"].value, 10);
         if (target.value.length >= maxLength && e.keyCode != 8) {
@@ -161,11 +160,32 @@ routing.route('/dashboard', 'components/dashboard.html', function (template) {
         }
     }
 
-    document.getElementById("clearAllField").onclick = function(e){
-        document.getElementById("plateState").value = "";
-        document.getElementById("plateFirstNumber").value = "";
-        document.getElementById("plateAlphabet").value = "";
-        document.getElementById("plateLastNumber").value = "";
+    var plateState = document.getElementById("plateState");
+    var plateFirstNumber = document.getElementById("plateFirstNumber");
+    var plateAlphabet = document.getElementById("plateAlphabet");
+    var plateLastNumber = document.getElementById("plateLastNumber");
+    var btnsearchPlate = document.getElementById("searchPlate")
+
+
+    document.getElementById("clearAllField").onclick = function () {
+        plateState.value = "";
+        plateFirstNumber.value = "";
+        plateAlphabet.value = "";
+        plateLastNumber.value = "";
+        $(thbtnsearchPlateis).removeClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', false);
+    }
+
+    btnsearchPlate.onclick = function () {
+        var form = $(".form-search-plate");
+        if (form.valid()) {
+            $(this).addClass('kt-spinner kt-spinner--right kt-spinner--sm kt-spinner--light').attr('disabled', true);
+            APIs.getSearchPlate({
+                plateState: plateState.value,
+                plateFirstNumber: plateFirstNumber.value,
+                plateAlphabet: plateAlphabet.value,
+                plateLastNumber: plateLastNumber.value
+            })
+        }
     }
 
 });
@@ -368,6 +388,21 @@ var APIs = {
             }
         });
     },
+
+    getSearchPlate(data) {
+        $.ajax({
+            type: "POST",
+            url: "/api/Plate/search?plateFirstNumber={0}&plateAlphabet={1}&plateLastNumber={2}&plateState={3}".format(data.plateFirstNumber, data.plateAlphabet, data.plateLastNumber, data.plateState),
+            contentType: "application/json; charset=utf-8",
+            headers: { 'Authorization': "Bearer " + localStorage.getItem("token") },
+            success: function (response) {
+                alert(JSON.stringify(response));
+            },
+            error: function (request, status, error) {
+                callback("اطلاعات نامعتبر می‌باشد!");
+            }
+        });
+    }
 }
 
 var extention = {
