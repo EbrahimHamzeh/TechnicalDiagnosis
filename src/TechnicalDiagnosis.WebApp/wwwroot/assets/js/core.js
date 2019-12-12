@@ -131,7 +131,43 @@ var routing = {
 
 routing.route('/dashboard', 'components/dashboard.html', function (template) {
     routing.ganarateTemplate({}, template);
-    KTDashboard.init();
+    // KTDashboard.init();
+    $('.maxlength').maxlength({
+        warningClass: "kt-badge kt-badge--warning kt-badge--rounded kt-badge--inline",
+        limitReachedClass: "kt-badge kt-badge--success kt-badge--rounded kt-badge--inline"
+    });
+
+    var container = document.getElementsByClassName("plate-input")[0];
+    container.onkeyup = function (e) {
+        var target = e.srcElement;
+        var maxLength = parseInt(target.attributes["maxlength"].value, 10);
+        var myLength = target.value.length;
+        var next = target.getAttribute("data-nextelement");
+        var prev = target.getAttribute("data-prevelement");
+        if(e.keyCode == 8 && myLength == 0 && prev)
+        {
+            document.getElementById(prev).focus();
+        }
+        if (myLength >= maxLength && next) {
+            document.getElementById(next).focus();
+        }
+    }
+
+    container.onkeypress = function(e) {
+        var target = e.srcElement;
+        var maxLength = parseInt(target.attributes["maxlength"].value, 10);
+        if (target.value.length >= maxLength && e.keyCode != 8) {
+            return false;
+        }
+    }
+
+    document.getElementById("clearAllField").onclick = function(e){
+        document.getElementById("plateState").value = "";
+        document.getElementById("plateFirstNumber").value = "";
+        document.getElementById("plateAlphabet").value = "";
+        document.getElementById("plateLastNumber").value = "";
+    }
+
 });
 
 routing.route('/plate', '', function () {

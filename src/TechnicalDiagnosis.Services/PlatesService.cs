@@ -13,8 +13,10 @@ namespace TechnicalDiagnosis.Services
 {
     public interface IPlatesService
     {
-        Task<bool> Insert(Plate plate);
-        Task<PagedQueryResult<Plate>> DataTableList(int Page = 1, int size = 10);
+        Task<bool> InsertAsync(Plate plate);
+        Task<Plate> FindByIdAsync(int plateId);
+        Task<PagedQueryResult<Plate>> DataTableListAsync(int Page = 1, int size = 10);
+        Task<Plate> FindBYPlateAsync(string plateFirstNumber, string plateAlphabet, string plateLastNumber, string plateState);
     }
 
     public class PlatesService : IPlatesService
@@ -22,10 +24,7 @@ namespace TechnicalDiagnosis.Services
         private readonly IUnitOfWork _uow;
         private readonly DbSet<Plate> _plates;
 
-        public PlatesService(
-            IUnitOfWork uow,
-            ISecurityService securityService,
-            IHttpContextAccessor contextAccessor)
+        public PlatesService(IUnitOfWork uow, ISecurityService securityService, IHttpContextAccessor contextAccessor)
         {
             _uow = uow;
             _uow.CheckArgumentIsNull(nameof(_uow));
@@ -33,7 +32,7 @@ namespace TechnicalDiagnosis.Services
             _plates = _uow.Set<Plate>();
         }
 
-        public async Task<PagedQueryResult<Plate>> DataTableList(int page = 1, int size = 10)
+        public async Task<PagedQueryResult<Plate>> DataTableListAsync(int page = 1, int size = 10)
         {
             var query = _plates.AsNoTracking().AsQueryable();
 
@@ -44,7 +43,15 @@ namespace TechnicalDiagnosis.Services
             return new PagedQueryResult<Plate> { Total = total, Rows = await query.ToListAsync() };
         }
 
-        public async Task<bool> Insert(Plate plate)
+        public async Task<Plate> FindBYPlateAsync(string plateFirstNumber, string plateAlphabet, string plateLastNumber, string plateState)
+        {
+            return await _plates.Where(x => x.PlateFirstNumber == plateFirstNumber &&
+              x.PlateAlphabet == plateAlphabet &&
+              x.PlateLastNumber == plateLastNumber &&
+              x.PlateState == plateState).FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> InsertAsync(Plate plate)
         {
             try
             {
@@ -57,6 +64,9 @@ namespace TechnicalDiagnosis.Services
             }
         }
 
-
+        public async Task<Plate> FindByIdAsync(int plateId)
+        {
+            return await _plates.FindAsync(plateId);
+        }
     }
 }

@@ -24,9 +24,8 @@ namespace TechnicalDiagnosis.WebApp.Controllers
     {
         private readonly IUnitOfWork _uow;
         private readonly IPlatesService _plateService;
-        public PlateController(
-            IPlatesService platesService,
-            IUnitOfWork uow)
+
+        public PlateController(IPlatesService platesService, IUnitOfWork uow)
         {
 
             _uow = uow;
@@ -42,7 +41,7 @@ namespace TechnicalDiagnosis.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await _plateService.Insert(new Plate
+                var result = await _plateService.InsertAsync(new Plate
                 {
                     FullName = model.FullName,
                     Mobile = model.Mobile,
@@ -69,90 +68,38 @@ namespace TechnicalDiagnosis.WebApp.Controllers
 
         [IgnoreAntiforgeryToken]
         [HttpPost("[action]")]
-        public async Task<IActionResult> List([FromQuery] int page,[FromQuery] int size)
+        public async Task<IActionResult> List([FromQuery] int page, [FromQuery] int size)
         {
-            var result = await _plateService.DataTableList(page, size);
+            var result = await _plateService.DataTableListAsync(page, size);
             return Json(result);
         }
 
-        // [AllowAnonymous]
-        // [IgnoreAntiforgeryToken]
-        // [HttpPost("[action]")]
-        // public async Task<IActionResult> Login([FromBody]  User loginUser)
-        // {
-        //     if (loginUser == null)
-        //     {
-        //         return BadRequest("user is not set.");
-        //     }
+        [IgnoreAntiforgeryToken]
+        [HttpPost("[action]")]
+        public async Task<IActionResult> search([FromQuery] string plateFirstNumber, [FromQuery] string plateAlphabet, [FromQuery] string plateLastNumber, [FromQuery] string plateState)
+        {
+            return Ok(await _plateService.FindBYPlateAsync(plateFirstNumber, plateAlphabet, plateLastNumber, plateState));
+        }
 
-        //     var user = await _usersService.FindUserAsync(loginUser.Username, loginUser.Password);
-        //     if (user == null || !user.IsActive)
-        //     {
-        //         return Unauthorized();
-        //     }
+        public async Task<IActionResult> update([FromBody] PlateViewModel model)
+        {
+            var plate = await _plateService.FindByIdAsync(model.Id);
+            if (plate == null) return Ok(new { error = "پلاکی یافت نشد." });
 
-        //     var result = await _tokenFactoryService.CreateJwtTokensAsync(user);
-        //     await _tokenStoreService.AddUserTokenAsync(user, result.RefreshTokenSerial, result.AccessToken, null);
-        //     await _uow.SaveChangesAsync();
+            plate.Description = model.Description;
+            plate.FullName = model.FullName;
+            // plate.IsActive = model.IsActive;
+            plate.IsTechnicalDiagnosis = model.IsTechnicalDiagnosis;
+            plate.Mobile = model.Mobile;
+            plate.PlateAlphabet = model.PlateAlphabet;
+            plate.PlateFirstNumber = model.PlateFirstNumber;
+            plate.PlateLastNumber = model.PlateLastNumber;
+            plate.PlateState = model.PlateState;
+            plate.ServiceDate = model.ServiceDate.ToGregorianDateTime() ?? DateTime.Now;
 
-        //     _antiforgery.RegenerateAntiForgeryCookies(result.Claims);
+            await _uow.SaveChangesAsync();
 
-        //     return Ok(new { access_token = result.AccessToken, refresh_token = result.RefreshToken, display_name = user.DisplayName  });
-        // }
-
-        // [AllowAnonymous]
-        // [HttpPost("[action]")]
-        // public async Task<IActionResult> RefreshToken([FromBody]JToken jsonBody)
-        // {
-        //     var refreshTokenValue = jsonBody.Value<string>("refreshToken");
-        //     if (string.IsNullOrWhiteSpace(refreshTokenValue))
-        //     {
-        //         return BadRequest("refreshToken is not set.");
-        //     }
-
-        //     var token = await _tokenStoreService.FindTokenAsync(refreshTokenValue);
-        //     if (token == null)
-        //     {
-        //         return Unauthorized();
-        //     }
-
-        //     var result = await _tokenFactoryService.CreateJwtTokensAsync(token.User);
-        //     await _tokenStoreService.AddUserTokenAsync(token.User, result.RefreshTokenSerial, result.AccessToken, _tokenFactoryService.GetRefreshTokenSerial(refreshTokenValue));
-        //     await _uow.SaveChangesAsync();
-
-        //     _antiforgery.RegenerateAntiForgeryCookies(result.Claims);
-
-        //     return Ok(new { access_token = result.AccessToken, refresh_token = result.RefreshToken });
-        // }
-
-        // [AllowAnonymous]
-        // [HttpGet("[action]")]
-        // public async Task<bool> Logout(string refreshToken)
-        // {
-        //     var claimsIdentity = this.User.Identity as ClaimsIdentity;
-        //     var userIdValue = claimsIdentity.FindFirst(ClaimTypes.UserData)?.Value;
-
-        //     // The Jwt implementation does not support "revoke OAuth token" (logout) by design.
-        //     // Delete the user's tokens from the database (revoke its bearer token)
-        //     await _tokenStoreService.RevokeUserBearerTokensAsync(userIdValue, refreshToken);
-        //     await _uow.SaveChangesAsync();
-
-        //     _antiforgery.DeleteAntiForgeryCookies();
-
-        //     return true;
-        // }
-
-        // [HttpGet("[action]"), HttpPost("[action]")]
-        // public bool IsAuthenticated()
-        // {
-        //     return User.Identity.IsAuthenticated;
-        // }
-
-        // [HttpGet("[action]"), HttpPost("[action]")]
-        // public IActionResult GetUserInfo()
-        // {
-        //     var claimsIdentity = User.Identity as ClaimsIdentity;
-        //     return Json(new { Username = claimsIdentity.Name });
-        // }
+            return Ok();
+        }
     }
 }
