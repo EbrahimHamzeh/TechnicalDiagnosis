@@ -1,5 +1,6 @@
 var routes = {};
 var dataTablePersian = { sEmptyTable: "هیچ داده ای در جدول وجود ندارد", sInfo: "نمایش _START_ تا _END_ از _TOTAL_ رکورد", sInfoEmpty: "نمایش 0 تا 0 از 0 رکورد", sInfoPostFix: "", sInfoFiltered: "(فیلتر شده از _MAX_ رکورد)", sInfoThousands: ",", sLengthMenu: "نمایش _MENU_ رکورد", sLoadingRecords: "در حال بارگزاری...", sProcessing: "در حال پردازش...", sSearch: "جستجو:", sZeroRecords: "رکوردی با این مشخصات پیدا نشد", oPaginate: { sFirst: "ابتدا", sLast: "انتها", sNext: "بعدی", sPrevious: "قبلی" }, oAria: { sSortAscending: ": فعال سازی نمایش به صورت صعودی", sSortDescending: ": فعال سازی نمایش به صورت نزولی" } }
+var viewBag = {};
 
 var routing = {
     GlobalTitle: "معاینه‌فنی",
@@ -184,7 +185,10 @@ routing.route('/dashboard', 'components/dashboard.html', function (template) {
                 plateFirstNumber: plateFirstNumber.value,
                 plateAlphabet: plateAlphabet.value,
                 plateLastNumber: plateLastNumber.value
-            })
+            }, function(response){
+                viewBag["plateSearchResult"] = response;
+                routing.changeRouteWithPushState("plate/serachresult/" + ((response && response.id) ? response.id : "0"));
+            });
         }
     }
 
@@ -222,7 +226,6 @@ routing.route('/plate/add', 'components/plate/detail.html', function (template) 
     routing.ganarateTemplate(data, template);
     KTLayout.initPageStickyPortlet();
 
-    APIs.getAllPlate("tablePlate");
     $("#serviceDate").pDatepicker({ format: 'YYYY/MM/DD' });
 
     document.getElementById("saveData").addEventListener("click", function (e) {
@@ -246,8 +249,146 @@ routing.route('/plate/add', 'components/plate/detail.html', function (template) 
 
 });
 
-routing.init();
+routing.route('/plate/edit/', 'components/plate/detail.html', function (template, id) {
+    var data = {
+        page: {
+            title: "ویرایش پلاک",
+            description: "",
+            backward: "plate"
+        },
+        breadCrumb: [
+            { title: "پلاک‌ها", link: "plate" }
+        ]
+    }
+    routing.ganarateTemplate(data, template);
+    KTLayout.initPageStickyPortlet();
 
+    var fullName = document.getElementById("fullName");
+    var mobile = document.getElementById("mobile");
+    var PlateState = document.getElementById("plateState");
+    var PlateAlphabet = document.getElementById("plateAlphabet");
+    var PlateFirstNumber = document.getElementById("plateFirstNumber");
+    var PlateLastNumber = document.getElementById("plateLastNumber");
+    var Description = document.getElementById("description");
+    var IsTechnicalDiagnosis = document.getElementById("isTechnicalDiagnosis");
+    var ServiceDate = document.getElementById("serviceDate");
+    $("#serviceDate").pDatepicker({ format: 'YYYY/MM/DD' });
+
+    APIs.getPlate(id, function (response) {
+        fullName.value = response.fullName;
+        mobile.value = response.mobile;
+        PlateState.value = response.plateState;
+        PlateAlphabet.value = response.plateAlphabet;
+        PlateFirstNumber.value = response.plateFirstNumber;
+        PlateLastNumber.value = response.plateLastNumber;
+        Description.value = response.description;
+        IsTechnicalDiagnosis.checked = response.isTechnicalDiagnosis;
+        ServiceDate.value = response.serviceDatePersian;
+    })
+
+    document.getElementById("saveData").addEventListener("click", function () {
+        notification.getStart();
+        var fields = {
+            id: parseInt(id),
+            fullName: fullName.value,
+            mobile: mobile.value,
+            PlateState: PlateState.value,
+            PlateAlphabet: PlateAlphabet.value,
+            PlateFirstNumber: PlateFirstNumber.value,
+            PlateLastNumber: PlateLastNumber.value,
+            Description: Description.value,
+            IsTechnicalDiagnosis: IsTechnicalDiagnosis.checked,
+            ServiceDate: ServiceDate.value,
+        }
+
+        APIs.setPlate(fields, function () {
+            routing.changeRouteWithPushState(data.page.backward)
+        });
+    });
+
+});
+
+routing.route('/plate/serachresult/', 'components/plate/detail.html', function (template, id) {
+    var data = {
+        page: {
+            title: "اطلاعات پلاک",
+            description: "",
+            backward: "plate"
+        },
+        breadCrumb: [
+            { title: "داشبورد", link: "dashboard" }
+        ]
+    }
+    routing.ganarateTemplate(data, template);
+    KTLayout.initPageStickyPortlet();
+
+    var fullName = document.getElementById("fullName");
+    var mobile = document.getElementById("mobile");
+    var PlateState = document.getElementById("plateState");
+    var PlateAlphabet = document.getElementById("plateAlphabet");
+    var PlateFirstNumber = document.getElementById("plateFirstNumber");
+    var PlateLastNumber = document.getElementById("plateLastNumber");
+    var Description = document.getElementById("description");
+    var IsTechnicalDiagnosis = document.getElementById("isTechnicalDiagnosis");
+    var ServiceDate = document.getElementById("serviceDate");
+    $("#serviceDate").pDatepicker({ format: 'YYYY/MM/DD' });
+
+    PlateState.readOnly = true;
+    PlateAlphabet.readOnly = true;
+    PlateFirstNumber.readOnly = true;
+    PlateLastNumber.readOnly = true;
+
+    if((id == 0 || id == "0") && viewBag["plateSearchResult"] == undefined) {
+        routing.changeRouteWithPushState("/dashboard" + (response && response.id) ? response.id : "0");
+    }
+
+    if(id > 0 && viewBag["plateSearchResult"] == undefined){
+        APIs.getPlate(id, function (response) {
+            fullName.value = response.fullName;
+            mobile.value = response.mobile;
+            PlateState.value = response.plateState;
+            PlateAlphabet.value = response.plateAlphabet;
+            PlateFirstNumber.value = response.plateFirstNumber;
+            PlateLastNumber.value = response.plateLastNumber;
+            Description.value = response.description;
+            IsTechnicalDiagnosis.checked = response.isTechnicalDiagnosis;
+            ServiceDate.value = response.serviceDatePersian;
+        })
+    } else {
+        fullName.value = viewBag["plateSearchResult"].fullName;
+        mobile.value = viewBag["plateSearchResult"].mobile;
+        PlateState.value = viewBag["plateSearchResult"].plateState;
+        PlateAlphabet.value = viewBag["plateSearchResult"].plateAlphabet;
+        PlateFirstNumber.value = viewBag["plateSearchResult"].plateFirstNumber;
+        PlateLastNumber.value = viewBag["plateSearchResult"].plateLastNumber;
+        Description.value = viewBag["plateSearchResult"].description;
+        IsTechnicalDiagnosis.checked = viewBag["plateSearchResult"].isTechnicalDiagnosis;
+        ServiceDate.value = viewBag["plateSearchResult"].serviceDatePersian;
+    }
+
+    // document.getElementById("saveData").addEventListener("click", function () {
+    //     notification.getStart();
+    //     var fields = {
+    //         id: parseInt(id),
+    //         fullName: fullName.value,
+    //         mobile: mobile.value,
+    //         PlateState: PlateState.value,
+    //         PlateAlphabet: PlateAlphabet.value,
+    //         PlateFirstNumber: PlateFirstNumber.value,
+    //         PlateLastNumber: PlateLastNumber.value,
+    //         Description: Description.value,
+    //         IsTechnicalDiagnosis: IsTechnicalDiagnosis.checked,
+    //         ServiceDate: ServiceDate.value,
+    //     }
+
+    //     APIs.setPlate(fields, function () {
+    //         routing.changeRouteWithPushState(data.page.backward)
+    //     });
+    // });
+
+});
+
+routing.init();
 
 var APIs = {
     signIn(username, password, callback) {
@@ -277,6 +418,42 @@ var APIs = {
         window.location.href = "../auth"
     },
 
+    setGlobalActionPrompt(address) {
+        swal.fire({
+            title: 'مطمئن هستید؟',
+            text: "آیا از انجام عملیات مطمئن هستید؟",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'بله',
+            cancelButtonText: 'کنسل',
+            reverseButtons: true
+        }).then(function (result) {
+            if (result.value) {
+                APIs.setGlobalAction(address)
+            } else if (result.dismiss === 'cancel') {
+                notification.showWarning("عملیات لغو شد.");
+            }
+        });
+    },
+
+    setGlobalAction(address) {
+        notification.getStart();
+        $.ajax({
+            type: "POST",
+            url: address,
+            headers: { 'Authorization': "Bearer " + localStorage.getItem("token") },
+            contentType: "application/x-www-form-urlencoded; charset=utf-8",
+            success: function (response) {
+                if (response && response.error && response.error.length) {
+                    notification.getDanger(response.error);
+                } else {
+                    $($('table[id^="table"]')[0]).DataTable().ajax.reload(null, false);
+                    notification.getDone();
+                }
+            }
+        });
+    },
+
     getAllPlate(elementId) {
         var draw = 0;
         $(document.getElementById(elementId)).DataTable({
@@ -299,29 +476,21 @@ var APIs = {
                 { data: 'mobile' },
                 { data: 'price', mRender: function (data, type, full) { return "ایران{0} {1} {2} {3}".format(full.plateState, full.plateFirstNumber, full.plateAlphabet, full.plateLastNumber); } },
                 { data: 'typeVehicleId' },
-                { data: 'serviceDate' },
+                { data: 'serviceDatePersian' },
                 { data: 'description' },
                 {
                     data: 'id',
                     mRender: function (data, type, full) {
-                        var status = "";
-                        if (full.status)
-                            status = '<a class="dropdown-item" href="javascript:APIs.setGlobalAction(\'DACAPAED\',' + data + ');"><i class="la la-eject"></i> غیرفعال</a>';
-                        else
-                            status = '<a class="dropdown-item" href="javascript:APIs.setGlobalAction(\'ACTAPAED\',' + data + ');"><i class="la la-check"></i> فعال</a>';
                         return '<span class="dropdown">' +
                             '<a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">' +
                             '<i class="la la-ellipsis-h"></i>' +
                             '</a>' +
                             '<div class="dropdown-menu dropdown-menu-right">' +
-                            '<a class="routing-link dropdown-item" href="package/edit/' + data + '"><i class="la la-edit"></i> ویرایش</a>' +
-                            '<a class="routing-link dropdown-item" href="package/codes/' + data + '"><i class="la la-cc-mastercard"></i> نمایش‌کدها &nbsp&nbsp&nbsp&nbsp<span class="kt-badge kt-badge--brand kt-badge--md">' + full.count + '</span></a>' +
-                            '<a class="routing-link dropdown-item" href="javascript:APIs.showModalImportCode(' + data + ');"><i class="la la-space-shuttle"></i> ایمپورت‌کدها</a>' +
-                            '<a class="dropdown-item" href="javascript:APIs.setGlobalActionPrompt(\'REMAPAED\',' + data + ');"><i class="la la-remove"></i> حذف</a>' +
-                            status +
+                            '<a class="routing-link dropdown-item" href="plate/edit/' + data + '"><i class="la la-edit"></i> ویرایش</a>' +
+                            '<a class="dropdown-item" href="javascript:APIs.setGlobalActionPrompt(\'/api/Plate/delete/' + data + '\');"><i class="la la-remove"></i> حذف</a>' +
                             '</div>' +
                             '</span>' +
-                            '<a href="package/edit/' + data + '" class="routing-link btn btn-sm btn-clean btn-icon btn-icon-md" title="ویرایش">' +
+                            '<a href="plate/edit/' + data + '" class="routing-link btn btn-sm btn-clean btn-icon btn-icon-md" title="ویرایش">' +
                             '<i class="la la-edit"></i>' +
                             '</a>';
                     }
@@ -374,7 +543,7 @@ var APIs = {
     setPlate(info, callback) {
         $.ajax({
             type: "POST",
-            url: "/api/Plate/Add",
+            url: info.id ? "/api/Plate/Update" : "/api/Plate/Add",
             headers: { 'Authorization': "Bearer " + localStorage.getItem("token") },
             contentType: "application/json; charset=utf-8",
             data: JSON.stringify(info),
@@ -389,14 +558,34 @@ var APIs = {
         });
     },
 
-    getSearchPlate(data) {
+    getSearchPlate(data, callback) {
         $.ajax({
             type: "POST",
             url: "/api/Plate/search?plateFirstNumber={0}&plateAlphabet={1}&plateLastNumber={2}&plateState={3}".format(data.plateFirstNumber, data.plateAlphabet, data.plateLastNumber, data.plateState),
             contentType: "application/json; charset=utf-8",
             headers: { 'Authorization': "Bearer " + localStorage.getItem("token") },
             success: function (response) {
-                alert(JSON.stringify(response));
+                // alert(JSON.stringify(response));
+                if (response && response.error && response.error.length) {
+                    notification.getDanger(response.error);
+                } else {
+                    callback(response)
+                }
+            },
+            error: function (request, status, error) {
+                callback("اطلاعات نامعتبر می‌باشد!");
+            }
+        });
+    },
+
+    getPlate(id, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/api/plate/get/" + id,
+            contentType: "application/json; charset=utf-8",
+            headers: { 'Authorization': "Bearer " + localStorage.getItem("token") },
+            success: function (response) {
+                callback(response)
             },
             error: function (request, status, error) {
                 callback("اطلاعات نامعتبر می‌باشد!");
@@ -512,11 +701,24 @@ String.prototype.numberWithCommas = function () {
     return this.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
+$(document).ajaxSend(function () {
+    KTApp.blockPage({
+        overlayColor: "#000000",
+        type: "v2",
+        state: "primary",
+        message: "درحال‌بارگذاری"
+    });
+});
+
+$(document).ajaxStop(function () {
+    KTApp.unblockPage();
+});
+
 $(document).ajaxError(function (jqXHR, textStatus, errorThrown) {
     if (textStatus.statusText == "Unauthorized")
         window.location.href = "../auth"
     else {
         $("#saveData").attr("disabled", true);
-        new Noty({ text: Resource.Noty.GlobarAjaxError, type: 'error' }).show();
+        notification.showDanger("مشکلی در ارتباط با سرور به‌وجود آمده است.")
     }
 });

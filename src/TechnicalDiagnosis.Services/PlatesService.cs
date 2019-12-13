@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TechnicalDiagnosis.Common;
 using TechnicalDiagnosis.ViewModels;
 using System.Linq;
+using DNTPersianUtils.Core;
 
 namespace TechnicalDiagnosis.Services
 {
@@ -15,6 +16,7 @@ namespace TechnicalDiagnosis.Services
     {
         Task<bool> InsertAsync(Plate plate);
         Task<Plate> FindByIdAsync(int plateId);
+        Task<bool> Delete(int plateId);
         Task<PagedQueryResult<Plate>> DataTableListAsync(int Page = 1, int size = 10);
         Task<Plate> FindBYPlateAsync(string plateFirstNumber, string plateAlphabet, string plateLastNumber, string plateState);
     }
@@ -67,6 +69,21 @@ namespace TechnicalDiagnosis.Services
         public async Task<Plate> FindByIdAsync(int plateId)
         {
             return await _plates.FindAsync(plateId);
+        }
+
+        public async Task<bool> Delete(int plateId)
+        {
+            var plate = await _plates.FindAsync(plateId);
+            if (plate == null) return false;
+            try
+            {
+                _plates.Remove(plate);
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
         }
     }
 }

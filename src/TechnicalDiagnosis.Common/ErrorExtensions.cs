@@ -8,7 +8,7 @@ namespace TechnicalDiagnosis.Common
     {
         public static string AllMessage(this ModelStateDictionary modelStat)
         {
-            return string.Join(',', modelStat.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
+            return string.Join("</br>", modelStat.Values.SelectMany(v => v.Errors).Select(x => x.ErrorMessage));
         }
     }
 }

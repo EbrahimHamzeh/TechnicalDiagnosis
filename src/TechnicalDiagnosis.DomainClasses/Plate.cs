@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using DNTPersianUtils.Core;
 
 namespace TechnicalDiagnosis.DomainClasses
 {
@@ -27,6 +29,15 @@ namespace TechnicalDiagnosis.DomainClasses
         public bool IsActive { get; set; }
 
         public DateTime ServiceDate { get; set; }
+
+        [NotMapped]
+        public string ServiceDatePersian
+        {
+            get
+            {
+                return ServiceDate.ToShortPersianDateString();
+            }  
+        }
 
         public bool IsTechnicalDiagnosis { get; set; }
 

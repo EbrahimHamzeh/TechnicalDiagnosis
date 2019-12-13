@@ -76,30 +76,56 @@ namespace TechnicalDiagnosis.WebApp.Controllers
 
         [IgnoreAntiforgeryToken]
         [HttpPost("[action]")]
-        public async Task<IActionResult> search([FromQuery] string plateFirstNumber, [FromQuery] string plateAlphabet, [FromQuery] string plateLastNumber, [FromQuery] string plateState)
+        public async Task<IActionResult> Search([FromQuery] string plateFirstNumber, [FromQuery] string plateAlphabet, [FromQuery] string plateLastNumber, [FromQuery] string plateState)
         {
             return Ok(await _plateService.FindBYPlateAsync(plateFirstNumber, plateAlphabet, plateLastNumber, plateState));
         }
 
-        public async Task<IActionResult> update([FromBody] PlateViewModel model)
+        [IgnoreAntiforgeryToken]
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Update([FromBody] PlateViewModel model)
         {
             var plate = await _plateService.FindByIdAsync(model.Id);
             if (plate == null) return Ok(new { error = "پلاکی یافت نشد." });
 
-            plate.Description = model.Description;
-            plate.FullName = model.FullName;
-            // plate.IsActive = model.IsActive;
-            plate.IsTechnicalDiagnosis = model.IsTechnicalDiagnosis;
-            plate.Mobile = model.Mobile;
-            plate.PlateAlphabet = model.PlateAlphabet;
-            plate.PlateFirstNumber = model.PlateFirstNumber;
-            plate.PlateLastNumber = model.PlateLastNumber;
-            plate.PlateState = model.PlateState;
-            plate.ServiceDate = model.ServiceDate.ToGregorianDateTime() ?? DateTime.Now;
+            if (ModelState.IsValid)
+            {
+                plate.Description = model.Description;
+                plate.FullName = model.FullName;
+                // plate.IsActive = model.IsActive;
+                plate.IsTechnicalDiagnosis = model.IsTechnicalDiagnosis;
+                plate.Mobile = model.Mobile;
+                plate.PlateAlphabet = model.PlateAlphabet;
+                plate.PlateFirstNumber = model.PlateFirstNumber;
+                plate.PlateLastNumber = model.PlateLastNumber;
+                plate.PlateState = model.PlateState;
+                plate.ServiceDate = model.ServiceDate.ToGregorianDateTime() ?? DateTime.Now;
+                await _uow.SaveChangesAsync();
+                return Ok();
+            }
 
-            await _uow.SaveChangesAsync();
+            return Ok(new { error = ModelState.AllMessage() });
+        }
 
-            return Ok();
+        [IgnoreAntiforgeryToken]
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Get(int id)
+        {
+            return Ok(await _plateService.FindByIdAsync(id));
+        }
+
+        [IgnoreAntiforgeryToken]
+        [HttpPost("[action]/{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (await _plateService.Delete(id)){
+                await _uow.SaveChangesAsync();
+                return Ok();
+            } 
+            else 
+            {
+                return Ok(new { error = "امکان حذف وجود ندارد" });
+            }
         }
     }
 }

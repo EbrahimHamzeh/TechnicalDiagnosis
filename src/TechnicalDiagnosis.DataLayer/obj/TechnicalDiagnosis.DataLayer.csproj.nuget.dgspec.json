@@ -147,6 +147,12 @@
       },
       "frameworks": {
         "netcoreapp3.0": {
+          "dependencies": {
+            "DNTPersianUtils.Core": {
+              "target": "Package",
+              "version": "[3.6.1, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
