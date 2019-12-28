@@ -17,7 +17,7 @@ namespace TechnicalDiagnosis.Services
         Task<bool> InsertAsync(Plate plate);
         Task<Plate> FindByIdAsync(int plateId);
         Task<bool> Delete(int plateId);
-        Task<PagedQueryResult<Plate>> DataTableListAsync(int Page = 1, int size = 10);
+        Task<PagedQueryResult<Plate>> DataTableListAsync(int page = 1, int size = 10);
         Task<Plate> FindBYPlateAsync(string plateFirstNumber, string plateAlphabet, string plateLastNumber, string plateState);
     }
 
@@ -40,9 +40,9 @@ namespace TechnicalDiagnosis.Services
 
             var total = await query.CountAsync();
 
-            var data = _plates.ApplyPaging(page, size);
+            var data = query.ApplyPaging(page, size);
 
-            return new PagedQueryResult<Plate> { Total = total, Rows = await query.ToListAsync() };
+            return new PagedQueryResult<Plate> { Total = total, Rows = await data.ToListAsync() };
         }
 
         public async Task<Plate> FindBYPlateAsync(string plateFirstNumber, string plateAlphabet, string plateLastNumber, string plateState)

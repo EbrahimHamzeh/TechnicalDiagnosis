@@ -6,6 +6,8 @@ using TechnicalDiagnosis.DataLayer.Context;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using TechnicalDiagnosis.Common;
+using TechnicalDiagnosis.ViewModels;
+using System.Linq;
 
 namespace TechnicalDiagnosis.Services
 {
@@ -18,6 +20,7 @@ namespace TechnicalDiagnosis.Services
         Task<User> GetCurrentUserAsync();
         int GetCurrentUserId();
         Task<(bool Succeeded, string Error)> ChangePasswordAsync(User user, string currentPassword, string newPassword);
+        Task<PagedQueryResult<User>> DataTableListAsync(int page = 1, int size = 10);
     }
 
     public class UsersService : IUsersService
@@ -104,6 +107,17 @@ namespace TechnicalDiagnosis.Services
             // user.SerialNumber = Guid.NewGuid().ToString("N"); // To force other logins to expire.
             await _uow.SaveChangesAsync();
             return (true, string.Empty);
+        }
+
+        public async Task<PagedQueryResult<User>> DataTableListAsync(int page = 1, int size = 10)
+        {
+            var query = _users.AsNoTracking().AsQueryable();
+
+            var total = await query.CountAsync();
+
+            var data = query.ApplyPaging(page, size);
+
+            return new PagedQueryResult<User> { Total = total, Rows = await data.ToListAsync() };
         }
     }
 }
