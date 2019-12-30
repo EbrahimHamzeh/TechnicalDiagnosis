@@ -35,36 +35,36 @@ namespace TechnicalDiagnosis.WebApp.Controllers
             _usersService.CheckArgumentIsNull(nameof(usersService));
         }
 
-        // [IgnoreAntiforgeryToken]
-        // [HttpPost("[action]")]
-        // public async Task<IActionResult> Add([FromBody] PlateViewModel model)
-        // {
-        //     if (ModelState.IsValid)
-        //     {
-        //         var result = await _plateService.InsertAsync(new Plate
-        //         {
-        //             FullName = model.FullName,
-        //             Mobile = model.Mobile,
-        //             PlateAlphabet = model.PlateAlphabet,
-        //             PlateFirstNumber = model.PlateFirstNumber,
-        //             PlateLastNumber = model.PlateLastNumber,
-        //             Description = model.Description,
-        //             IsTechnicalDiagnosis = model.IsTechnicalDiagnosis,
-        //             IsActive = true,
-        //             PlateState = model.PlateState,
-        //             ServiceDate = model.ServiceDate.ToGregorianDateTime() ?? DateTime.Now,
-        //         });
+        [IgnoreAntiforgeryToken]
+        [HttpPost("[action]")]
+        public async Task<IActionResult> Add([FromBody] PlateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _plateService.InsertAsync(new Plate
+                {
+                    FullName = model.FullName,
+                    Mobile = model.Mobile,
+                    PlateAlphabet = model.PlateAlphabet,
+                    PlateFirstNumber = model.PlateFirstNumber,
+                    PlateLastNumber = model.PlateLastNumber,
+                    Description = model.Description,
+                    IsTechnicalDiagnosis = model.IsTechnicalDiagnosis,
+                    IsActive = true,
+                    PlateState = model.PlateState,
+                    ServiceDate = model.ServiceDate.ToGregorianDateTime() ?? DateTime.Now,
+                });
 
-        //         if (result)
-        //         {
-        //             await _uow.SaveChangesAsync();
-        //             return Ok();
-        //         }
-        //         else return Ok(new { error = "متاسفانه مشکلی در ثبت اطلاعات به وجود آمده است." });
-        //     }
+                if (result)
+                {
+                    await _uow.SaveChangesAsync();
+                    return Ok();
+                }
+                else return Ok(new { error = "متاسفانه مشکلی در ثبت اطلاعات به وجود آمده است." });
+            }
 
-        //     return Ok(new { error = ModelState.AllMessage() });
-        // }
+            return Ok(new { error = ModelState.AllMessage() });
+        }
 
         [IgnoreAntiforgeryToken]
         [HttpPost("[action]")]

@@ -115,9 +115,9 @@ namespace TechnicalDiagnosis.Services
 
             var total = await query.CountAsync();
 
-            var data = query.ApplyPaging(page, size);
+            query = query.ApplyPaging(page, size);
 
-            return new PagedQueryResult<User> { Total = total, Rows = await data.ToListAsync() };
+            return new PagedQueryResult<User> { Total = total, Rows = await query.ToListAsync() };
         }
     }
 }

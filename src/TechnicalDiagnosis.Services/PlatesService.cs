@@ -40,9 +40,9 @@ namespace TechnicalDiagnosis.Services
 
             var total = await query.CountAsync();
 
-            var data = query.ApplyPaging(page, size);
+            query = query.ApplyPaging(page, size);
 
-            return new PagedQueryResult<Plate> { Total = total, Rows = await data.ToListAsync() };
+            return new PagedQueryResult<Plate> { Total = total, Rows = await query.ToListAsync() };
         }
 
         public async Task<Plate> FindBYPlateAsync(string plateFirstNumber, string plateAlphabet, string plateLastNumber, string plateState)
