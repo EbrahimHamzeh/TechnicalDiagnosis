@@ -58,6 +58,7 @@ namespace TechnicalDiagnosis.WebApp
             services.AddScoped<ITokenValidatorService, TokenValidatorService>();
             services.AddScoped<ITokenFactoryService, TokenFactoryService>();
             services.AddScoped<IPlatesService, PlatesService>();
+            services.AddScoped<ITypeVehicleService, TypeVehicleService>();
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {

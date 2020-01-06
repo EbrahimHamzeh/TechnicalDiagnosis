@@ -20,33 +20,26 @@ namespace TechnicalDiagnosis.WebApp.Controllers
     [Route("api/[controller]")]
     [Produces("application/json")]
     [Authorize(Policy = CustomRoles.Admin)]
-    public class UserController : Controller
+    public class TypeVehicleController : Controller
     {
         private readonly IUnitOfWork _uow;
-        private readonly IUsersService _usersService;
-        private readonly ISecurityService _securityService;
-
-        public UserController(IUsersService usersService, IUnitOfWork uow,
-            ISecurityService securityService)
+        private readonly ITypeVehicleService _typeVehicleController;
+        public TypeVehicleController(ITypeVehicleService typeVehicleService, IUnitOfWork uow)
         {
-
             _uow = uow;
             _uow.CheckArgumentIsNull(nameof(_uow));
 
-            _usersService = usersService;
-            _usersService.CheckArgumentIsNull(nameof(usersService));
-
-            _securityService = securityService;
-            _securityService.CheckArgumentIsNull(nameof(_securityService));
+            _typeVehicleController = typeVehicleService;
+            _typeVehicleController.CheckArgumentIsNull(nameof(typeVehicleService));
         }
 
         [IgnoreAntiforgeryToken]
         [HttpPost("[action]")]
-        public async Task<IActionResult> Add([FromBody] UserViewModel model)
+        public async Task<IActionResult> Add([FromBody] TypeVehicle model)
         {
             if (ModelState.IsValid)
             {
-                var result = await _usersService.InsertAsync(model);
+                var result = await _typeVehicleController.InsertAsync(model);
 
                 if (result)
                 {
@@ -63,7 +56,7 @@ namespace TechnicalDiagnosis.WebApp.Controllers
         [HttpPost("[action]")]
         public async Task<IActionResult> List([FromQuery] int page, [FromQuery] int size)
         {
-            var result = await _usersService.DataTableListAsync(page, size);
+            var result = await _typeVehicleController.DataTableListAsync(page, size);
             return Json(result);
         }
 

@@ -15,5 +15,6 @@ namespace TechnicalDiagnosis.ViewModels
         [Required(ErrorMessage = "رمزعبور الزامی می‌باشد.")]
         public string Password { get; set; }
         public bool IsActive { get; set; }
+        public bool IsAdmin { get; set; }
     }
 }

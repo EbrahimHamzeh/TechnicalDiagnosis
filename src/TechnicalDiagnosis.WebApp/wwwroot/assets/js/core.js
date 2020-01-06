@@ -470,6 +470,87 @@ routing.route("/user", "", function() {
   APIs.getAllUser(data.page.id);
 });
 
+routing.route("/user/add", "components/user/detail.html", function(template) {
+  var data = {
+    page: {
+      title: "کاربر جدید",
+      description: "",
+      backward: "user"
+    },
+    breadCrumb: [{ title: "کاربران", link: "user" }]
+  };
+
+  routing.ganarateTemplate(data, template);
+  KTLayout.initPageStickyPortlet();
+
+  document.getElementById("saveData").addEventListener("click", function(e) {
+    notification.getStart();
+    var fields = {
+      username: document.getElementById("username").value,
+      password: document.getElementById("password").value,
+      displayName: document.getElementById("displayName").value,
+      isActive: document.getElementById("isAdmin").checked,
+      description: document.getElementById("description").value,
+    };
+
+    APIs.setUser(fields, function() {
+      routing.changeRouteWithPushState(data.page.backward);
+    });
+  });
+});
+
+routing.route("/typeVehicle", "", function() {
+  data = {
+    page: {
+      title: "نوع خودرو/ دوره",
+      id: "tablTypeVehicle",
+      button: [
+        {
+          title: "جدید",
+          href: "typeVehicle/add",
+          icon: "la-plus",
+          color: "btn-brand"
+        }
+      ]
+    }
+  };
+
+  routing.ganarateTemplate(
+    data,
+    document.getElementById("dataTable").innerHTML
+  );
+  APIs.getAllTypeVehicle(data.page.id);
+});
+
+routing.route("/typeVehicle/add", "components/typeVehicle/detail.html", function(template) {
+  var data = {
+    page: {
+      title: "کاربر جدید",
+      description: "",
+      backward: "user"
+    },
+    breadCrumb: [{ title: "کاربران", link: "user" }]
+  };
+
+  routing.ganarateTemplate(data, template);
+  KTLayout.initPageStickyPortlet();
+
+  document.getElementById("saveData").addEventListener("click", function(e) {
+    notification.getStart();
+    var fields = {
+      username: document.getElementById("username").value,
+      password: document.getElementById("password").value,
+      displayName: document.getElementById("displayName").value,
+      isActive: document.getElementById("isAdmin").checked,
+      description: document.getElementById("description").value,
+    };
+
+    APIs.setUser(fields, function() {
+      routing.changeRouteWithPushState(data.page.backward);
+    });
+  });
+});
+
 routing.init();
 
 var APIs = {
@@ -816,7 +897,6 @@ var APIs = {
       serverSide: true,
       searching: false,
       ajax: function(data, callback, settings) {
-        // var dataRequest = { action: "SHALPAED", info: { page: (data.start / data.length) + 1, count: data.length } };
         $.ajax({
           type: "POST",
           url: "/api/User/List?page={0}&size={1}".format(
@@ -846,25 +926,137 @@ var APIs = {
       },
       drawCallback: function(settings) {
         routing.addRoutingEventToLinks();
-        var menus = document.querySelectorAll(".add-new-code-package");
-        for (var i = 0; i < menus.length; i++) {
-          menus[i].addEventListener("click", function(e) {
-            event.preventDefault();
-            var element = event.target;
-            notification.getStart();
-            var id = element.getAttribute("data-id");
-            var codeElement = element.parentElement.parentElement.getElementsByTagName(
-              "input"
-            )[0];
-            if (codeElement) var code = codeElement.value;
-            if (id && code) {
-              APIs.setCode(id, code, function() {
-                codeElement.value = "";
+      }
+    });
+  },
+
+  setUser(info, callback) {
+    $.ajax({
+      type: "POST",
+      url: info.id ? "/api/user/Update" : "/api/user/Add",
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(info),
+      success: function(response) {
+        if (response && response.error && response.error.length) {
+          notification.getDanger(response.error);
+        } else {
+          notification.getDone();
+          callback();
+        }
+      }
+    });
+  },
+
+  getAllTypeVehicle(elementId) {
+    var draw = 0;
+    $(document.getElementById(elementId)).DataTable({
+      language: dataTablePersian,
+      responsive: true,
+      ordering: false,
+      fixedHeader: true,
+      stateSave: true,
+      columnDefs: [
+        {
+          title: "عنوان",
+          targets: 0,
+          width: "20%",
+          className: "text-center"
+        },
+        {
+          title: "روز(هر دوره)",
+          targets: 1,
+          width: "20%",
+          className: "text-center"
+        },
+        {
+          title: "وضعیت",
+          targets: 2,
+          width: "5%",
+          className: "text-center"
+        },
+        { title: "عملیات", targets: 3, width: "10%", className: "text-center" }
+      ],
+      columns: [
+        { data: "title" },
+        { data: "days" },
+        { data: "isActive" },
+        {
+          data: "id",
+          mRender: function(data, type, full) {
+            return (
+              '<span class="dropdown">' +
+              '<a href="#" class="btn btn-sm btn-clean btn-icon btn-icon-md" data-toggle="dropdown" aria-expanded="true">' +
+              '<i class="la la-ellipsis-h"></i>' +
+              "</a>" +
+              '<div class="dropdown-menu dropdown-menu-right">' +
+              '<a class="routing-link dropdown-item" href="plate/edit/' +
+              data +
+              '"><i class="la la-edit"></i> ویرایش</a>' +
+              '<a class="dropdown-item" href="javascript:APIs.setGlobalActionPrompt(\'/api/Plate/delete/' +
+              data +
+              '\');"><i class="la la-remove"></i> حذف</a>' +
+              "</div>" +
+              "</span>" +
+              '<a href="plate/edit/' +
+              data +
+              '" class="routing-link btn btn-sm btn-clean btn-icon btn-icon-md" title="ویرایش">' +
+              '<i class="la la-edit"></i>' +
+              "</a>"
+            );
+          }
+        }
+      ],
+      processing: true,
+      serverSide: true,
+      searching: false,
+      ajax: function(data, callback, settings) {
+        $.ajax({
+          type: "POST",
+          url: "/api/typevehicle/list?page={0}&size={1}".format(
+            data.start / data.length + 1,
+            data.length
+          ),
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          contentType: "application/x-www-form-urlencoded; charset=utf-8",
+          success: function(response) {
+            if (response.rows) {
+              draw = draw + 1;
+              callback({
+                data: response.rows,
+                draw: draw,
+                recordsFiltered: response.total,
+                recordsTotal: response.total
               });
             } else {
-              notification.showWarning("اطلاعات نامعتبر است");
+              notification.showDanger(
+                response && response.data && response.data.message
+                  ? response.data.message
+                  : "مشکلی در ارتباط به وجود آمده است"
+              );
             }
-          });
+          }
+        });
+      },
+      drawCallback: function(settings) {
+        routing.addRoutingEventToLinks();
+      }
+    });
+  },
+
+  setTypeVehicle(info, callback) {
+    $.ajax({
+      type: "POST",
+      url: info.id ? "/api/typevehicle/update" : "/api/typevehicle/add",
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      contentType: "application/json; charset=utf-8",
+      data: JSON.stringify(info),
+      success: function(response) {
+        if (response && response.error && response.error.length) {
+          notification.getDanger(response.error);
+        } else {
+          notification.getDone();
+          callback();
         }
       }
     });

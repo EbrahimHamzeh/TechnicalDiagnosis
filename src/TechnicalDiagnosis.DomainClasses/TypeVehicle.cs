@@ -8,7 +8,9 @@ namespace TechnicalDiagnosis.DomainClasses
 
         public string Title { get; set; }
 
-        public int TimeInterval { get; set; }
+        public int Days { get; set; }
+
+        public string Description { get; set; }
 
         public bool IsActive { get; set; }
     }

@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using TechnicalDiagnosis.Common;
 using TechnicalDiagnosis.ViewModels;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace TechnicalDiagnosis.Services
 {
@@ -21,12 +22,15 @@ namespace TechnicalDiagnosis.Services
         int GetCurrentUserId();
         Task<(bool Succeeded, string Error)> ChangePasswordAsync(User user, string currentPassword, string newPassword);
         Task<PagedQueryResult<User>> DataTableListAsync(int page = 1, int size = 10);
+        Task<bool> InsertAsync(UserViewModel model);
     }
 
     public class UsersService : IUsersService
     {
         private readonly IUnitOfWork _uow;
         private readonly DbSet<User> _users;
+        private readonly DbSet<UserRole> _userRole;
+        private readonly DbSet<Role> _role;
         private readonly ISecurityService _securityService;
         private readonly IHttpContextAccessor _contextAccessor;
 
@@ -39,6 +43,8 @@ namespace TechnicalDiagnosis.Services
             _uow.CheckArgumentIsNull(nameof(_uow));
 
             _users = _uow.Set<User>();
+            _role = _uow.Set<Role>();
+            _userRole = _uow.Set<UserRole>();
 
             _securityService = securityService;
             _securityService.CheckArgumentIsNull(nameof(_securityService));
@@ -119,5 +125,41 @@ namespace TechnicalDiagnosis.Services
 
             return new PagedQueryResult<User> { Total = total, Rows = await query.ToListAsync() };
         }
+
+        private async Task<List<Role>> GetAllRoles(){
+            return await _role.ToListAsync();
+        }
+
+        public async Task<bool> InsertAsync(UserViewModel model)
+        {
+            try
+            {
+                var roles = await this.GetAllRoles();
+                var userRole = roles.Where(x => x.Name == CustomRoles.User).FirstOrDefault();
+                var adminRole = roles.Where(x => x.Name == CustomRoles.Admin).FirstOrDefault();
+                var user = new User {
+                    Username = model.Username,
+                    Password =  _securityService.GetSha256Hash(model.Password),
+                    DisplayName = model.DisplayName,
+                    IsActive = model.IsActive,
+                    SerialNumber = Guid.NewGuid().ToString("N")
+                };
+
+                await _users.AddAsync(user);
+
+                await _userRole.AddAsync(new UserRole { Role = userRole, User = user });
+
+                if(model.IsAdmin)
+                   await _userRole.AddAsync(new UserRole { Role = adminRole, User = user });
+
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
+        }
+
+
     }
 }
