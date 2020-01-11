@@ -47,7 +47,12 @@ var routing = {
       id = url.replace(/\D/g, "");
       url = url.replace(/[0-9]/g, "");
     }
-    if(url == "/" && !this.isExpireToken() && window.location.pathname != "/auth/") url= "/dashboard";
+    if (
+      url == "/" &&
+      !this.isExpireToken() &&
+      window.location.pathname != "/auth/"
+    )
+      url = "/dashboard";
     var route = routes[url];
     if (route && route.address) {
       $.ajax({
@@ -284,6 +289,9 @@ routing.route("/plate/add", "components/plate/detail.html", function(template) {
 
   $("#serviceDate").pDatepicker({ format: "YYYY/MM/DD" });
 
+  var typeVehicle = document.getElementById("typeVehicle");
+  APIs.getSelectList(typeVehicle, 0);
+
   document.getElementById("saveData").addEventListener("click", function(e) {
     notification.getStart();
     var fields = {
@@ -294,9 +302,9 @@ routing.route("/plate/add", "components/plate/detail.html", function(template) {
       PlateFirstNumber: document.getElementById("plateFirstNumber").value,
       PlateLastNumber: document.getElementById("plateLastNumber").value,
       Description: document.getElementById("description").value,
-      IsTechnicalDiagnosis: document.getElementById("isTechnicalDiagnosis")
-        .checked,
-      ServiceDate: document.getElementById("serviceDate").value
+      IsTechnicalDiagnosis: document.getElementById("isTechnicalDiagnosis").checked,
+      ServiceDate: document.getElementById("serviceDate").value,
+      typeVehicleId: Number(typeVehicle.options[typeVehicle.selectedIndex].value)
     };
 
     APIs.setPlate(fields, function() {
@@ -364,7 +372,10 @@ routing.route("/plate/edit/", "components/plate/detail.html", function(
   });
 });
 
-routing.route("/plate/serachresult/", "components/plate/detail.html", function(template,id) {
+routing.route("/plate/serachresult/", "components/plate/detail.html", function(
+  template,
+  id
+) {
   var data = {
     page: { title: "اطلاعات پلاک", description: "", backward: "dashboard" },
     breadCrumb: [{ title: "داشبورد", link: "dashboard" }]
@@ -426,24 +437,24 @@ routing.route("/plate/serachresult/", "components/plate/detail.html", function(t
     }
   }
 
-  document.getElementById("saveData").addEventListener("click", function () {
-      notification.getStart();
-      var fields = {
-          id: parseInt(id),
-          fullName: fullName.value,
-          mobile: mobile.value,
-          PlateState: PlateState.value,
-          PlateAlphabet: PlateAlphabet.value,
-          PlateFirstNumber: PlateFirstNumber.value,
-          PlateLastNumber: PlateLastNumber.value,
-          Description: Description.value,
-          IsTechnicalDiagnosis: IsTechnicalDiagnosis.checked,
-          ServiceDate: ServiceDate.value,
-      }
+  document.getElementById("saveData").addEventListener("click", function() {
+    notification.getStart();
+    var fields = {
+      id: parseInt(id),
+      fullName: fullName.value,
+      mobile: mobile.value,
+      PlateState: PlateState.value,
+      PlateAlphabet: PlateAlphabet.value,
+      PlateFirstNumber: PlateFirstNumber.value,
+      PlateLastNumber: PlateLastNumber.value,
+      Description: Description.value,
+      IsTechnicalDiagnosis: IsTechnicalDiagnosis.checked,
+      ServiceDate: ServiceDate.value
+    };
 
-      APIs.setPlate(fields, function () {
-          routing.changeRouteWithPushState(data.page.backward)
-      });
+    APIs.setPlate(fields, function() {
+      routing.changeRouteWithPushState(data.page.backward);
+    });
   });
 });
 
@@ -490,7 +501,7 @@ routing.route("/user/add", "components/user/detail.html", function(template) {
       password: document.getElementById("password").value,
       displayName: document.getElementById("displayName").value,
       isActive: document.getElementById("isAdmin").checked,
-      description: document.getElementById("description").value,
+      description: document.getElementById("description").value
     };
 
     APIs.setUser(fields, function() {
@@ -522,34 +533,36 @@ routing.route("/typeVehicle", "", function() {
   APIs.getAllTypeVehicle(data.page.id);
 });
 
-routing.route("/typeVehicle/add", "components/typeVehicle/detail.html", function(template) {
-  var data = {
-    page: {
-      title: "کاربر جدید",
-      description: "",
-      backward: "user"
-    },
-    breadCrumb: [{ title: "کاربران", link: "user" }]
-  };
-
-  routing.ganarateTemplate(data, template);
-  KTLayout.initPageStickyPortlet();
-
-  document.getElementById("saveData").addEventListener("click", function(e) {
-    notification.getStart();
-    var fields = {
-      username: document.getElementById("username").value,
-      password: document.getElementById("password").value,
-      displayName: document.getElementById("displayName").value,
-      isActive: document.getElementById("isAdmin").checked,
-      description: document.getElementById("description").value,
+routing.route(
+  "/typeVehicle/add",
+  "components/typeVehicle/detail.html",
+  function(template) {
+    var data = {
+      page: {
+        title: "نوع خودرو/ دوره جدید",
+        description: "",
+        backward: "typeVehicle"
+      },
+      breadCrumb: [{ title: "نوع خودرو/ دوره", link: "typeVehicle" }]
     };
 
-    APIs.setUser(fields, function() {
-      routing.changeRouteWithPushState(data.page.backward);
+    routing.ganarateTemplate(data, template);
+    KTLayout.initPageStickyPortlet();
+
+    document.getElementById("saveData").addEventListener("click", function(e) {
+      notification.getStart();
+      var fields = {
+        title: document.getElementById("title").value,
+        Days: Number(document.getElementById("period").value),
+        description: document.getElementById("description").value
+      };
+
+      APIs.setTypeVehicle(fields, function() {
+        routing.changeRouteWithPushState(data.page.backward);
+      });
     });
-  });
-});
+  }
+);
 
 routing.init();
 
@@ -1061,6 +1074,28 @@ var APIs = {
       }
     });
   },
+
+  getSelectList(element, selectedId) {
+    $.ajax({
+      type: "POST",
+      url: "/api/typeVehicle/selectlist/" + selectedId,
+      headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+      contentType: "application/json; charset=utf-8",
+      success: function(response) {
+        if (response && response.error && response.error.length) {
+          notification.showDanger(response.error);
+        } else {
+          for (var i = 0; i < response.length; i++) {
+            var opt = document.createElement("option");
+            opt.value = response[i].value;
+            opt.innerHTML = response[i].text;
+            opt.selected = response[i].selected;
+            element.appendChild(opt);
+          }
+        }
+      }
+    });
+  }
 };
 
 var extention = {

@@ -9,6 +9,8 @@ using TechnicalDiagnosis.Common;
 using TechnicalDiagnosis.ViewModels;
 using System.Linq;
 using DNTPersianUtils.Core;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Collections.Generic;
 
 namespace TechnicalDiagnosis.Services
 {
@@ -18,6 +20,7 @@ namespace TechnicalDiagnosis.Services
         Task<TypeVehicle> FindByIdAsync(int typeVehicleId);
         Task<bool> Delete(int typeVehicleId);
         Task<PagedQueryResult<TypeVehicle>> DataTableListAsync(int page = 1, int size = 10);
+        Task<List<SelectListItem>> GetSelectList(int? id);
     }
 
     public class TypeVehicleService : ITypeVehicleService
@@ -75,6 +78,15 @@ namespace TechnicalDiagnosis.Services
             {
                 return false;
             }
+        }
+
+        public async Task<List<SelectListItem>> GetSelectList(int? id)
+        {
+            return  await _typeVehicles.Select( x=> new SelectListItem {
+                Value = x.Id.ToString(),
+                Text = x.Title,
+                Selected = x.Id == (id?? 0)
+            }).ToListAsync();
         }
     }
 }

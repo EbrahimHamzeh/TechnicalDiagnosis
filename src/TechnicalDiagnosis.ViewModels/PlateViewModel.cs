@@ -42,5 +42,8 @@ namespace TechnicalDiagnosis.ViewModels
         public bool IsTechnicalDiagnosis { get; set; }
 
         public string Description { get; set; }
+
+        [Required(ErrorMessage = "نوع دوره الزامی می باشد.")]
+        public int typeVehicleId { get; set; }
     }
 }

@@ -53,6 +53,7 @@ namespace TechnicalDiagnosis.WebApp.Controllers
                     IsActive = true,
                     PlateState = model.PlateState,
                     ServiceDate = model.ServiceDate.ToGregorianDateTime() ?? DateTime.Now,
+                    TypeVehicleId = model.typeVehicleId
                 });
 
                 if (result)

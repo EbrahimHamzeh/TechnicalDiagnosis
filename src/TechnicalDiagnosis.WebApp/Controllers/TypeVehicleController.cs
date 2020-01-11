@@ -60,6 +60,14 @@ namespace TechnicalDiagnosis.WebApp.Controllers
             return Json(result);
         }
 
+        [IgnoreAntiforgeryToken]
+        [HttpPost("[action]/{id:int?}")]
+        public async Task<IActionResult> SelectList(int? id)
+        {
+            var result = await _typeVehicleController.GetSelectList(id);
+            return Json(result);
+        }
+
         // [IgnoreAntiforgeryToken]
         // [HttpPost("[action]")]
         // public async Task<IActionResult> Update([FromBody] UserViewModel model)
