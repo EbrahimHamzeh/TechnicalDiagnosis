@@ -14,7 +14,10 @@ namespace TechnicalDiagnosis.DataLayer.Context
         public virtual DbSet<UserRole> UserRoles { get; set; }
         public virtual DbSet<UserToken> UserTokens { get; set; }
         public virtual DbSet<Plate> Plates { get; set; }
+        public virtual DbSet<PlateDetail> PlateDetails { get; set; }
         public virtual DbSet<TypeVehicle> TypeVehicles { get; set; }
+        public virtual DbSet<Message> Messages { get; set; }
+        public virtual DbSet<TemplateMessage> TemplateMessages { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

@@ -49,7 +49,7 @@ namespace TechnicalDiagnosis.WebApp.Controllers
                     PlateFirstNumber = model.PlateFirstNumber,
                     PlateLastNumber = model.PlateLastNumber,
                     Description = model.Description,
-                    IsTechnicalDiagnosis = model.IsTechnicalDiagnosis,
+                    // IsTechnicalDiagnosis = model.IsTechnicalDiagnosis,
                     IsActive = true,
                     PlateState = model.PlateState,
                     ServiceDate = model.ServiceDate.ToGregorianDateTime() ?? DateTime.Now,
@@ -94,7 +94,7 @@ namespace TechnicalDiagnosis.WebApp.Controllers
                 plate.Description = model.Description;
                 plate.FullName = model.FullName;
                 // plate.IsActive = model.IsActive;
-                plate.IsTechnicalDiagnosis = model.IsTechnicalDiagnosis;
+                // plate.IsTechnicalDiagnosis = model.IsTechnicalDiagnosis;
                 plate.Mobile = model.Mobile;
                 plate.PlateAlphabet = model.PlateAlphabet;
                 plate.PlateFirstNumber = model.PlateFirstNumber;
